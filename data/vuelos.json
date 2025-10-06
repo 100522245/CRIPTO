@@ -1,0 +1,22 @@
+[
+  {
+    "id_vuelo": "AS100",
+    "origen": "Madrid",
+    "destino": "Barcelona",
+    "fecha": "2025-10-20",
+    "hora": "09:30",
+    "precio": 79.99,
+    "plazas_totales": 180,
+    "plazas_disponibles": 180
+  },
+  {
+    "id_vuelo": "AS101",
+    "origen": "Madrid",
+    "destino": "París",
+    "fecha": "2025-10-20",
+    "hora": "13:15",
+    "precio": 129.00,
+    "plazas_totales": 180,
+    "plazas_disponibles": 180
+  }
+]

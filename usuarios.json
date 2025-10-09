@@ -1,3 +1,7 @@
 {
-  "usuarios": []
+    "usuarios": [],
+    "juan": {
+        "salt": "84b48f34c8dfd8e3fb610db9a25ad64e",
+        "hash": "d94f031113f21b46054e62277ed91aceb91fd090468245795169eac21aea1f96"
+    }
 }

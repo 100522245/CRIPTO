@@ -1,0 +1,16 @@
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\r\nCreated by Adrián Vázquez Santiago in oct 2025\r\nUniversidad Carlos III de Madrid\r\n\"\"\"\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 861f8bf72f26c37df5695923ea58834d538a07af)
++++ b/main.py	(date 1759485009230)
+@@ -2,3 +2,5 @@
+ Created by Adrián Vázquez Santiago in oct 2025
+ Universidad Carlos III de Madrid
+ """
++
++

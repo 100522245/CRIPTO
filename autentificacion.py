@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.exceptions import InvalidKey
 
 # Archivo donde guardaremos los usuarios y hashes
-DB_PATH = "usuarios.json"
+RUTA_USUARIOS = "data/usuarios.json"
 
 # ======== FUNCIONES AUXILIARES ========
 
@@ -13,12 +13,14 @@ def derivar_clave(contraseña: str, salt: bytes) -> bytes:
     Deriva una clave (hash) segura de una contraseña usando Scrypt.
     """
     kdf = Scrypt(
-        salt=salt,
+        salt=salt,  #Valor que se usa para asegurar que dos usuarios no
+        # tengan el mismo hash
         length=32,  # Longitud del hash en bytes
         n=2**14,    # Parámetro de coste (mayor = más seguro, pero más lento)
         r=8,
         p=1,
     )
+    #Convierte la contraseña a bytes
     return kdf.derive(contraseña.encode("utf-8"))
 
 
@@ -34,9 +36,12 @@ def verificar_clave(contraseña: str, salt: bytes, hash_guardado: bytes) -> bool
         p=1,
     )
     try:
+        #Usa verify para comprobar el hash
         kdf.verify(contraseña.encode("utf-8"), hash_guardado)
+        #Si coinciden devuelve true
         return True
     except InvalidKey:
+        #Si no coinciden devuelve una excepcion
         return False
 
 
@@ -50,15 +55,15 @@ def registrar(nombre: str, contraseña: str):
     salt = os.urandom(16)
     hash_generado = derivar_clave(contraseña, salt)
 
-    # Carga la base de datos
+    # Carga el json con todos los usuarios
     usuarios = {}
-    if os.path.exists(DB_PATH):
-        with open(DB_PATH, "r", encoding="utf-8") as f:
+    if os.path.exists(RUTA_USUARIOS):
+        with open(RUTA_USUARIOS, "r", encoding="utf-8") as f:
             usuarios = json.load(f)
 
     # Verifica si el usuario ya existe
     if nombre in usuarios:
-        raise ValueError("El usuario ya existe.")
+        raise ValueError("El usuario ya existe")
 
     # Guarda el usuario con su salt y hash (en formato hexadecimal)
     usuarios[nombre] = {
@@ -67,26 +72,28 @@ def registrar(nombre: str, contraseña: str):
     }
 
     # Escribe el archivo actualizado
-    with open(DB_PATH, "w", encoding="utf-8") as f:
+    with open(RUTA_USUARIOS, "w", encoding="utf-8") as f:
         json.dump(usuarios, f, ensure_ascii=False, indent=4)
 
-    print(f"✅ Usuario '{nombre}' registrado correctamente.")
+    print("Usuario",nombre,"registrado correctamente")
 
 
 def autenticar(nombre: str, contraseña: str) -> bool:
     """
     Autentica un usuario verificando su contraseña.
     """
-    if not os.path.exists(DB_PATH):
-        print("❌ No hay usuarios registrados aún.")
+    #Comprueba que el archivo de usuarios existe
+    if not os.path.exists(RUTA_USUARIOS):
+        print("No hay usuarios registrados aún")
         return False
 
-    with open(DB_PATH, "r", encoding="utf-8") as f:
+    #Carga los datos del json
+    with open(RUTA_USUARIOS, "r", encoding="utf-8") as f:
         usuarios = json.load(f)
 
     # Verifica si el usuario existe
     if nombre not in usuarios:
-        print("❌ Usuario no encontrado.")
+        print("Usuario no encontrado.")
         return False
 
     # Recupera los valores guardados
@@ -95,18 +102,11 @@ def autenticar(nombre: str, contraseña: str) -> bool:
 
     # Verifica la contraseña
     if verificar_clave(contraseña, salt, hash_guardado):
-        print("✅ Autenticación exitosa.")
+        print("Los datos son correctos")
         return True
     else:
-        print("❌ Contraseña incorrecta.")
+        print("Contraseña incorrecta.")
         return False
 
 
-# ======== PRUEBA DEL FUNCIONAMIENTO ========
-if __name__ == "__main__":
-    # Registrar usuario
-    registrar("juan", "ContraseñaSegura123")
 
-    # Intentar autenticación
-    autenticar("juan", "ContraseñaSegura123")  # ✅ Correcta
-    autenticar("juan", "123456")               # ❌ Incorrecta

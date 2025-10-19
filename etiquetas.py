@@ -40,5 +40,5 @@ def verificar_hmac(mensaje: bytes, tag: bytes) -> bool:
         print("Verificación exitosa")
         return True
     except Exception:
-        print("Verificación FALLÓ,el mensaje cambio")
+        print("Erro en la verificación,el mensaje cambio")
         return False

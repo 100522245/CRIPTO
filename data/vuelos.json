@@ -1,22 +1,82 @@
 [
   {
-    "id_vuelo": "AS100",
-    "origen": "Madrid",
-    "destino": "Barcelona",
-    "fecha": "2025-10-20",
-    "hora": "09:30",
-    "precio": 79.99,
-    "plazas_totales": 180,
-    "plazas_disponibles": 180
+    "numero_vuelo": "IB1001",
+    "lugar_origen": "Madrid (MAD)",
+    "lugar_destino": "Barcelona (BCN)",
+    "hora_salida": "08:00",
+    "hora_llegada": "09:15",
+    "fecha": "2025-11-01"
   },
   {
-    "id_vuelo": "AS101",
-    "origen": "Madrid",
-    "destino": "París",
-    "fecha": "2025-10-20",
-    "hora": "13:15",
-    "precio": 129.00,
-    "plazas_totales": 180,
-    "plazas_disponibles": 180
+    "numero_vuelo": "VY2045",
+    "lugar_origen": "Valencia (VLC)",
+    "lugar_destino": "Sevilla (SVQ)",
+    "hora_salida": "10:00",
+    "hora_llegada": "11:40",
+    "fecha": "2025-11-02"
+  },
+  {
+    "numero_vuelo": "UX3340",
+    "lugar_origen": "Madrid (MAD)",
+    "lugar_destino": "Lisboa (LIS)",
+    "hora_salida": "09:45",
+    "hora_llegada": "10:40",
+    "fecha": "2025-11-02"
+  },
+  {
+    "numero_vuelo": "RY5009",
+    "lugar_origen": "Sevilla (SVQ)",
+    "lugar_destino": "Bilbao (BIO)",
+    "hora_salida": "13:30",
+    "hora_llegada": "15:10",
+    "fecha": "2025-11-03"
+  },
+  {
+    "numero_vuelo": "IB8721",
+    "lugar_origen": "Madrid (MAD)",
+    "lugar_destino": "París (CDG)",
+    "hora_salida": "11:20",
+    "hora_llegada": "13:30",
+    "fecha": "2025-11-04"
+  },
+  {
+    "numero_vuelo": "UX7777",
+    "lugar_origen": "Barcelona (BCN)",
+    "lugar_destino": "Roma (FCO)",
+    "hora_salida": "16:15",
+    "hora_llegada": "18:25",
+    "fecha": "2025-11-05"
+  },
+  {
+    "numero_vuelo": "RY3030",
+    "lugar_origen": "Valencia (VLC)",
+    "lugar_destino": "Madrid (MAD)",
+    "hora_salida": "07:20",
+    "hora_llegada": "08:10",
+    "fecha": "2025-11-06"
+  },
+  {
+    "numero_vuelo": "IB9090",
+    "lugar_origen": "Madrid (MAD)",
+    "lugar_destino": "Londres (LHR)",
+    "hora_salida": "14:30",
+    "hora_llegada": "16:40",
+    "fecha": "2025-11-07"
+  },
+  {
+    "numero_vuelo": "UX2121",
+    "lugar_origen": "Bilbao (BIO)",
+    "lugar_destino": "Barcelona (BCN)",
+    "hora_salida": "18:00",
+    "hora_llegada": "19:25",
+    "fecha": "2025-11-08"
+  },
+  {
+    "numero_vuelo": "VY9911",
+    "lugar_origen": "Sevilla (SVQ)",
+    "lugar_destino": "Madrid (MAD)",
+    "hora_salida": "20:15",
+    "hora_llegada": "21:25",
+    "fecha": "2025-11-09"
   }
 ]

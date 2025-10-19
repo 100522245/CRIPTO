@@ -1,0 +1,42 @@
+[
+  {
+    "numero_vuelo": "IB1001",
+    "lugar_origen": "Madrid (MAD)",
+    "lugar_destino": "Barcelona (BCN)",
+    "hora_salida": "08:00",
+    "hora_llegada": "09:15",
+    "fecha": "2025-11-01",
+    "nombre_pasajero": "ana",
+    "usuario": "ana"
+  },
+  {
+    "numero_vuelo": "UX3340",
+    "lugar_origen": "Madrid (MAD)",
+    "lugar_destino": "Lisboa (LIS)",
+    "hora_salida": "09:45",
+    "hora_llegada": "10:40",
+    "fecha": "2025-11-02",
+    "nombre_pasajero": "carlos",
+    "usuario": "carlos"
+  },
+  {
+    "numero_vuelo": "IB8721",
+    "lugar_origen": "Madrid (MAD)",
+    "lugar_destino": "París (CDG)",
+    "hora_salida": "11:20",
+    "hora_llegada": "13:30",
+    "fecha": "2025-11-04",
+    "nombre_pasajero": "maria",
+    "usuario": "maria"
+  },
+  {
+    "numero_vuelo": "IB9090",
+    "lugar_origen": "Madrid (MAD)",
+    "lugar_destino": "Londres (LHR)",
+    "hora_salida": "14:30",
+    "hora_llegada": "16:40",
+    "fecha": "2025-11-07",
+    "nombre_pasajero": "Adrian",
+    "usuario": "Adrian"
+  }
+]

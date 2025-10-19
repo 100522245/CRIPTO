@@ -6,5 +6,9 @@
     "Adrian": {
         "salt": "d52a3faa411f976a545633db4dafb61f",
         "hash": "7e96934fa49a33f5e0fb0dcb47b2112e71cac6d4ae01ca9d4e803c86c3b2a769"
+    },
+    "Chema": {
+        "salt": "13ec39d55642d27aaba438dc0274baa8",
+        "hash": "3ae4f6e62cf02a35317a464fecc53f2e1e110b767dc437665f92f6ca4e3c60c7"
     }
 }

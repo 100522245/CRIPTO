@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Correcciones y compresion del apartado 1 y reorganizacion del codigo">
-      <change beforePath="$PROJECT_DIR$/data/reservas.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/reservados.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/vuelos.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/vuelos.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
-    </list>
+    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Cambio de un print" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,16 +40,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.autentificacion.executor&quot;: &quot;Run&quot;,
-    &quot;Python.cifrado_descifrado.executor&quot;: &quot;Run&quot;,
-    &quot;Python.interfaz.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.autentificacion.executor": "Run",
+    "Python.cifrado_descifrado.executor": "Run",
+    "Python.etiquetas.executor": "Run",
+    "Python.interfaz.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.interfaz">
     <configuration name="autentificacion" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CRIPTO" />
@@ -69,7 +65,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/autentificacion.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Trace\PycharmProjects\CRIPTO\eval1\autentificacion.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -91,7 +87,29 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cifrado_descifrado.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Trace\PycharmProjects\CRIPTO\eval1\cifrado_descifrado.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="etiquetas" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CRIPTO" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\Trace\PycharmProjects\CRIPTO\eval1\etiquetas.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -125,8 +143,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.interfaz" />
-        <item itemvalue="Python.autentificacion" />
+        <item itemvalue="Python.etiquetas" />
         <item itemvalue="Python.cifrado_descifrado" />
+        <item itemvalue="Python.autentificacion" />
       </list>
     </recent_temporary>
   </component>
@@ -154,7 +173,31 @@
       <option name="project" value="LOCAL" />
       <updated>1760896392500</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Cambios en la interfaz y Json reservados listo para cifrar">
+      <option name="closed" value="true" />
+      <created>1760898482086</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1760898482086</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Cambios en la interfaz y Json reservados listo para cifrar">
+      <option name="closed" value="true" />
+      <created>1760898487897</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1760898487897</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Cambio de un print">
+      <option name="closed" value="true" />
+      <created>1760898733956</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1760898733956</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -170,6 +213,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Correcciones y compresion del apartado 1 y reorganizacion del codigo" />
-    <option name="LAST_COMMIT_MESSAGE" value="Correcciones y compresion del apartado 1 y reorganizacion del codigo" />
+    <MESSAGE value="Cambios en la interfaz y Json reservados listo para cifrar" />
+    <MESSAGE value="Cambio de un print" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cambio de un print" />
   </component>
 </project>

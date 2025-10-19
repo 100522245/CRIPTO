@@ -5,7 +5,8 @@ import tkinter as tk
 from tkinter import messagebox
 
 # --- Tus módulos existentes ---
-import autentificacion as auth
+from eval1 import autentificacion as auth
+
 # Si más adelante reactivas cifrado/HMAC:
 # import cifrado_descifrado as crypto
 # import etiquetas as hmac_utils

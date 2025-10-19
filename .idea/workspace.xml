@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autentificacion.py" beforeDir="false" afterPath="$PROJECT_DIR$/autentificacion.py" afterDir="false" />
+    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Correcciones y compresion del apartado 1 y reorganizacion del codigo">
+      <change beforePath="$PROJECT_DIR$/data/reservas.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/reservados.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/usuarios.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/vuelos.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/vuelos.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +55,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.autentificacion">
+  <component name="RunManager" selected="Python.interfaz">
     <configuration name="autentificacion" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CRIPTO" />
       <option name="ENV_FILES" value="" />
@@ -125,8 +124,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.autentificacion" />
         <item itemvalue="Python.interfaz" />
+        <item itemvalue="Python.autentificacion" />
         <item itemvalue="Python.cifrado_descifrado" />
       </list>
     </recent_temporary>
@@ -147,6 +146,15 @@
       <option name="presentableId" value="Default" />
       <updated>1759484676835</updated>
     </task>
+    <task id="LOCAL-00001" summary="Correcciones y compresion del apartado 1 y reorganizacion del codigo">
+      <option name="closed" value="true" />
+      <created>1760896392500</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1760896392500</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -159,5 +167,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Correcciones y compresion del apartado 1 y reorganizacion del codigo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Correcciones y compresion del apartado 1 y reorganizacion del codigo" />
   </component>
 </project>

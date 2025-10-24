@@ -1,22 +1,19 @@
-# interfaz_vuelos.py
 import os
 import json
 import tkinter as tk
 from tkinter import messagebox
 
-# --- Tus módulos existentes ---
+# --- Importar autenticación desde eval1 ---
 from eval1 import autentificacion as auth
+from eval1 import cifrado_descifrado as crypto
+from eval1 import etiquetas as hmac_utils
 
-# Si más adelante reactivas cifrado/HMAC:
-# import cifrado_descifrado as crypto
-# import etiquetas as hmac_utils
-
-# Rutas de datos
+# --- Rutas de datos ---
 RUTA_VUELOS = "data/vuelos.json"
 RUTA_RESERVAS = "data/reservados.json"
 
 
-# ------------------ Utilidades JSON ------------------
+# ------------------ UTILIDADES JSON ------------------
 def _leer_json(ruta, por_defecto):
     """Carga un JSON o devuelve 'por_defecto' si no existe o está corrupto."""
     if not os.path.exists(ruta):
@@ -35,7 +32,7 @@ def _guardar_json(ruta, data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-# ------------------ Lógica de vuelos/reservas ------------------
+# ------------------ LÓGICA DE VUELOS/RESERVAS ------------------
 def vuelos_disponibles():
     """Lista de vuelos disponibles (cada vuelo es un dict)."""
     return _leer_json(RUTA_VUELOS, [])
@@ -46,41 +43,60 @@ def reservas_todas():
     return _leer_json(RUTA_RESERVAS, [])
 
 
-def vuelo_por_numero(numero_vuelo: str):
-    """Devuelve el dict del vuelo por su número, o None si no existe."""
+def vuelo_por_id(vuelo_id: str):
+    """Devuelve el dict del vuelo por su número de vuelo."""
     for v in vuelos_disponibles():
-        if v.get("numero_vuelo") == numero_vuelo:
+        if str(v.get("numero_vuelo")) == vuelo_id:
             return v
     return None
 
 
-def vuelo_esta_reservado(numero_vuelo: str) -> bool:
-    """True si ese número de vuelo ya está en reservados.json."""
-    return any(r.get("numero_vuelo") == numero_vuelo for r in reservas_todas())
+def vuelo_esta_reservado(vuelo_id: str) -> bool:
+    """True si ese vuelo ya está reservado."""
+    return any(str(r.get("numero_vuelo")) == vuelo_id for r in reservas_todas())
 
 
-def reservar_vuelo(numero_vuelo: str, usuario: str) -> bool:
-    """
-    Crea la reserva copiando TODOS los campos del vuelo y añade:
-    - nombre_pasajero = usuario (no se pide aparte)
-    - usuario (quién reservó)
-    Devuelve True si se pudo reservar; False si ya estaba reservado o no existe.
-    """
-    if vuelo_esta_reservado(numero_vuelo):
-        return False
-    vuelo = vuelo_por_numero(numero_vuelo)
+def reservar_vuelo(vuelo_id: str, usuario: str):
+    """Reserva el vuelo cifrado para el usuario."""
+    vuelo = vuelo_por_id(vuelo_id)
     if not vuelo:
-        return False
+        return False, "Vuelo no encontrado"
+
+    if vuelo_esta_reservado(vuelo_id):
+        return False, "Vuelo ya reservado"
+
+    # Guardar una versión cifrada de la reserva
+    user_dir = os.path.join("data", "keys", usuario)
+    public_path = os.path.join(user_dir, "public.pem")
+
+    if not os.path.exists(public_path):
+        return False, "No se encontró la clave pública del usuario"
+
+    with open(public_path, "rb") as f:
+        public_pem = f.read()
 
     reserva = {
-        **vuelo,  # incluye numero_vuelo, lugar_origen, lugar_destino, hora_salida, hora_llegada, fecha
-        "nombre_pasajero": usuario,
-        "usuario": usuario
+        "usuario": usuario,
+        "vuelo": vuelo
     }
+    reserva_json = json.dumps(reserva, ensure_ascii=False).encode("utf-8")
+
+    reserva_cifrada = crypto.encrypt_reserva(reserva_json, public_pem)
+    tag = hmac_utils.crear_hmac(reserva_cifrada)
+
+    os.makedirs("data/reservas", exist_ok=True)
+    ruta_archivo = os.path.join("data/reservas", f"{usuario}_{vuelo_id}.json")
+    with open(ruta_archivo, "wb") as f:
+        f.write(reserva_cifrada)
+    with open(ruta_archivo + ".tag", "wb") as f:
+        f.write(tag)
+
+    # Guardar registro plano
     reservas = reservas_todas()
-    reservas.append(reserva)
+    reservas.append({"usuario": usuario, **vuelo})
     _guardar_json(RUTA_RESERVAS, reservas)
-    return True
+
+    return True, f"Reserva guardada correctamente para el vuelo {vuelo_id}"
 
 
 def reservas_de_usuario(usuario: str):
@@ -88,17 +104,17 @@ def reservas_de_usuario(usuario: str):
     return [r for r in reservas_todas() if r.get("usuario") == usuario]
 
 
-# ------------------ Interfaz Tkinter ------------------
+# ------------------ INTERFAZ TKINTER ------------------
 class AppVuelos:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Compra y Reserva de Vuelos")
-        self.root.geometry("780x580")
+        self.root.title("Gestión de Vuelos y Reservas")
+        self.root.geometry("820x600")
         self.usuario_actual = None
         self.build_login()
         self.root.mainloop()
 
-    # --------- Vistas ---------
+    # --------- VISTAS ---------
     def build_login(self):
         """Pantalla de inicio de sesión y registro."""
         self.clear_root()
@@ -130,20 +146,20 @@ class AppVuelos:
         self.listbox.pack(side="left", fill="both", expand=True)
         scrollbar.config(command=self.listbox.yview)
 
-        self._refrescar_lista_vuelos()
+        self._refrescar_vuelos()
 
         # Botones de acción
         btns = tk.Frame(self.root)
         btns.pack(pady=8)
         tk.Button(btns, text="Reservar seleccionado", command=self.reservar_seleccionado).grid(row=0, column=0, padx=6)
-        tk.Button(btns, text="Mis vuelos", command=self.mostrar_mis_vuelos).grid(row=0, column=1, padx=6)
+        tk.Button(btns, text="Mis reservas", command=self.mostrar_mis_reservas).grid(row=0, column=1, padx=6)
         tk.Button(btns, text="Cerrar sesión", command=self.build_login).grid(row=0, column=2, padx=6)
 
         # Área de salida/mensajes
         self.output_text = tk.Text(self.root, height=14)
         self.output_text.pack(fill="both", expand=True, padx=10, pady=8)
 
-    # --------- Acciones ---------
+    # --------- ACCIONES ---------
     def registrar(self):
         """Registrar un nuevo usuario."""
         try:
@@ -160,25 +176,26 @@ class AppVuelos:
         else:
             messagebox.showerror("Login", "Usuario o contraseña incorrectos.")
 
-    def _refrescar_lista_vuelos(self):
-        """
-        Rellena la lista con:
-        'numero | fecha | origen→destino | salida-llegada (RESERVADO?)'
-        """
+    def _refrescar_vuelos(self):
+        """Recarga lista de vuelos en el ListBox."""
         self.listbox.delete(0, tk.END)
         vuelos = vuelos_disponibles()
         if not vuelos:
             self.listbox.insert(tk.END, "No hay vuelos cargados en data/vuelos.json")
             return
+
         for v in vuelos:
-            num = v.get("numero_vuelo", "N/A")
+            numero = v.get("numero_vuelo")
+            origen = v.get("lugar_origen", "")
+            destino = v.get("lugar_destino", "")
+            salida = v.get("hora_salida", "")
+            llegada = v.get("hora_llegada", "")
             fecha = v.get("fecha", "")
-            o = v.get("lugar_origen", "")
-            d = v.get("lugar_destino", "")
-            hs = v.get("hora_salida", "")
-            hl = v.get("hora_llegada", "")
-            estado = " (RESERVADO)" if vuelo_esta_reservado(num) else ""
-            self.listbox.insert(tk.END, f"{num} | {fecha} | {o}→{d} | {hs}-{hl}{estado}")
+            estado = " (RESERVADO)" if vuelo_esta_reservado(str(numero)) else ""
+            self.listbox.insert(
+                tk.END,
+                f"{numero} | {origen} → {destino} | {fecha} {salida}-{llegada}{estado}"
+            )
 
     def reservar_seleccionado(self):
         """Permite al usuario reservar el vuelo seleccionado."""
@@ -189,23 +206,15 @@ class AppVuelos:
         linea = self.listbox.get(sel[0])
         numero_vuelo = linea.split("|")[0].strip()
 
-        if vuelo_esta_reservado(numero_vuelo):
-            messagebox.showerror("Reserva", f"El vuelo {numero_vuelo} ya está reservado.")
-            return
-
-        # No pedimos nombre del pasajero: se usa el usuario logueado
-        ok = reservar_vuelo(numero_vuelo, self.usuario_actual)
+        ok, msg = reservar_vuelo(numero_vuelo, self.usuario_actual)
         if ok:
-            messagebox.showinfo("Reserva", f"Reserva realizada para {numero_vuelo}.")
-            self._refrescar_lista_vuelos()
-            self.output_text.insert(
-                tk.END,
-                f"✅ Reservado {numero_vuelo} por {self.usuario_actual}\n"
-            )
+            messagebox.showinfo("Reserva", msg)
+            self._refrescar_vuelos()
+            self.output_text.insert(tk.END, f"✅ {msg}\n")
         else:
-            messagebox.showerror("Reserva", "No se pudo reservar (vuelo inexistente o ya reservado).")
+            messagebox.showerror("Reserva", msg)
 
-    def mostrar_mis_vuelos(self):
+    def mostrar_mis_reservas(self):
         """Muestra las reservas del usuario actual."""
         mis = reservas_de_usuario(self.usuario_actual)
         self.output_text.delete("1.0", tk.END)
@@ -217,15 +226,15 @@ class AppVuelos:
             self.output_text.insert(
                 tk.END,
                 f"- {r['numero_vuelo']} | {r.get('fecha','')} | {r['lugar_origen']}→{r['lugar_destino']} | "
-                f"{r['hora_salida']}-{r['hora_llegada']} | pasajero: {r['nombre_pasajero']}\n"
+                f"{r['hora_salida']}-{r['hora_llegada']}\n"
             )
 
-    # --------- Utilidad ---------
+    # --------- UTILIDAD ---------
     def clear_root(self):
         for w in self.root.winfo_children():
             w.destroy()
 
 
-# Punto de entrada
+# ------------------ PUNTO DE ENTRADA ------------------
 if __name__ == "__main__":
     AppVuelos()

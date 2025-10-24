@@ -10,5 +10,13 @@
     "Chema": {
         "salt": "13ec39d55642d27aaba438dc0274baa8",
         "hash": "3ae4f6e62cf02a35317a464fecc53f2e1e110b767dc437665f92f6ca4e3c60c7"
+    },
+    "ivan7": {
+        "salt": "1a0672e62370a2d171652efaaad73583",
+        "hash": "febb809569273546df79a88fcdc0e5cb1d47b37f938419196fd68ebec6817328"
+    },
+    "ivan84": {
+        "salt": "79a16fcf5967b38150bfabc9dc217dd0",
+        "hash": "569a3d219de8c3896ddec962500ee839e9e792db77279736887790fed8a23751"
     }
 }

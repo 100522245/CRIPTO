@@ -1,0 +1,19 @@
+Index: usuarios.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n    \"usuarios\": [],\r\n    \"juan\": {\r\n        \"salt\": \"84b48f34c8dfd8e3fb610db9a25ad64e\",\r\n        \"hash\": \"d94f031113f21b46054e62277ed91aceb91fd090468245795169eac21aea1f96\"\r\n    },\r\n    \"\": {\r\n        \"salt\": \"50c217145c746f52081e5ff2ac2b773c\",\r\n        \"hash\": \"5ad178688163d19be4ce4b78b58c315ca2e0cee87b53bb917c79e7b66a1ba84f\"\r\n    },\r\n    \"Ivan7\": {\r\n        \"salt\": \"3c42daccb111f6c9e813f802443aec26\",\r\n        \"hash\": \"6423af515539fa9f191329998276578e0a251ad64497cf6f9e723b250fb664a9\"\r\n    }\r\n}
+===================================================================
+diff --git a/usuarios.json b/usuarios.json
+--- a/usuarios.json	(revision c346d2f4093e36ab32d1bbc290f422b84ba4a299)
++++ b/usuarios.json	(date 1760719774533)
+@@ -11,5 +11,9 @@
+     "Ivan7": {
+         "salt": "3c42daccb111f6c9e813f802443aec26",
+         "hash": "6423af515539fa9f191329998276578e0a251ad64497cf6f9e723b250fb664a9"
++    },
++    "luis": {
++        "salt": "e9648400b6248410fb31dc215c267e6f",
++        "hash": "f4903f43d3139acef7b7173de3e2c8491c08011d0322692f599276121fc5e103"
+     }
+ }
+\ No newline at end of file

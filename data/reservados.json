@@ -38,5 +38,44 @@
     "fecha": "2025-11-07",
     "nombre_pasajero": "Adrian",
     "usuario": "Adrian"
+  },
+  {
+    "numero_vuelo": "UX7777",
+    "lugar_origen": "Barcelona (BCN)",
+    "lugar_destino": "Roma (FCO)",
+    "hora_salida": "16:15",
+    "hora_llegada": "18:25",
+    "fecha": "2025-11-05",
+    "nombre_pasajero": "ivan7",
+    "usuario": "ivan7"
+  },
+  {
+    "numero_vuelo": "UX2121",
+    "lugar_origen": "Bilbao (BIO)",
+    "lugar_destino": "Barcelona (BCN)",
+    "hora_salida": "18:00",
+    "hora_llegada": "19:25",
+    "fecha": "2025-11-08",
+    "nombre_pasajero": "ivan7",
+    "usuario": "ivan7"
+  },
+  {
+    "numero_vuelo": "VY2045",
+    "lugar_origen": "Valencia (VLC)",
+    "lugar_destino": "Sevilla (SVQ)",
+    "hora_salida": "10:00",
+    "hora_llegada": "11:40",
+    "fecha": "2025-11-02",
+    "nombre_pasajero": "ivan7",
+    "usuario": "ivan7"
+  },
+  {
+    "usuario": "ivan84",
+    "numero_vuelo": "RY5009",
+    "lugar_origen": "Sevilla (SVQ)",
+    "lugar_destino": "Bilbao (BIO)",
+    "hora_salida": "13:30",
+    "hora_llegada": "15:10",
+    "fecha": "2025-11-03"
   }
 ]

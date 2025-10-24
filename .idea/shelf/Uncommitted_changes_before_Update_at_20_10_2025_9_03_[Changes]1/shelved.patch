@@ -1,0 +1,117 @@
+Index: interfaz.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># interfaz_vuelos.py\r\nimport tkinter as tk\r\nfrom tkinter import messagebox\r\nimport json\r\nimport base64\r\n\r\n# Importar tus módulos existentes\r\nimport autentificacion as auth\r\nimport cifrado_descifrado as crypto\r\nimport etiquetas as hmac_utils\r\n\r\nRSA_PASSWORD = b\"clave_segura_usuario\"\r\n\r\nclass AppVuelos:\r\n    def __init__(self):\r\n        self.root = tk.Tk()\r\n        self.root.title(\"Compra Segura de Vuelos\")\r\n        self.root.geometry(\"600x500\")\r\n        self.rsa_priv, self.rsa_pub = crypto.generate_rsa_keys(RSA_PASSWORD)\r\n        self.usuario_actual = None\r\n        self.build_login()\r\n        self.root.mainloop()\r\n\r\n    def build_login(self):\r\n        self.clear_root()\r\n        tk.Label(self.root, text=\"Usuario:\").pack()\r\n        self.usuario_entry = tk.Entry(self.root)\r\n        self.usuario_entry.pack()\r\n        tk.Label(self.root, text=\"Contraseña:\").pack()\r\n        self.pass_entry = tk.Entry(self.root, show=\"*\")\r\n        self.pass_entry.pack()\r\n        tk.Button(self.root, text=\"Registrar\", command=self.registrar).pack(pady=5)\r\n        tk.Button(self.root, text=\"Iniciar sesión\", command=self.login).pack(pady=5)\r\n\r\n    def build_vuelo(self):\r\n        self.clear_root()\r\n        tk.Label(self.root, text=f\"Usuario: {self.usuario_actual}\").pack()\r\n        self.campos = {}\r\n        for campo in [\"numero_vuelo\",\"nombre_pasajero\",\"lugar_destino\",\"lugar_llegada\",\"hora_salida\",\"hora_llegada\"]:\r\n            tk.Label(self.root, text=campo).pack()\r\n            entry = tk.Entry(self.root)\r\n            entry.pack()\r\n            self.campos[campo] = entry\r\n        tk.Button(self.root, text=\"Cifrar vuelo\", command=self.cifrar_vuelo).pack(pady=5)\r\n        self.output_text = tk.Text(self.root, height=15)\r\n        self.output_text.pack()\r\n\r\n    def registrar(self):\r\n        try:\r\n            auth.registrar(self.usuario_entry.get(), self.pass_entry.get())\r\n            messagebox.showinfo(\"Registro\", \"Usuario registrado correctamente\")\r\n        except Exception as e:\r\n            messagebox.showerror(\"Error\", str(e))\r\n\r\n    def login(self):\r\n        if auth.autenticar(self.usuario_entry.get(), self.pass_entry.get()):\r\n            self.usuario_actual = self.usuario_entry.get()\r\n            self.build_vuelo()\r\n        else:\r\n            messagebox.showerror(\"Error\", \"Usuario o contraseña incorrectos\")\r\n\r\n    def cifrar_vuelo(self):\r\n        vuelo = {k: v.get() for k, v in self.campos.items()}\r\n        data_bytes = json.dumps(vuelo, indent=4).encode()\r\n        aad = b\"informacion de vuelo autenticada\"\r\n        encrypted = crypto.encrypt_message(data_bytes, aad, self.rsa_pub)\r\n        tag = hmac_utils.crear_hmac(data_bytes)\r\n        decrypted = crypto.decrypt_message(encrypted, self.rsa_priv, RSA_PASSWORD)\r\n        self.output_text.delete(\"1.0\", tk.END)\r\n        self.output_text.insert(tk.END, \"✅ Datos cifrados:\\n\")\r\n        self.output_text.insert(tk.END, encrypted.decode() + \"\\n\\n\")\r\n        self.output_text.insert(tk.END, \"✅ HMAC generado: \" + base64.b64encode(tag).decode() + \"\\n\")\r\n        self.output_text.insert(tk.END, \"✅ Datos descifrados:\\n\" + decrypted.decode() + \"\\n\")\r\n        self.output_text.insert(tk.END, \"✅ HMAC verificado: \" + str(hmac_utils.verificar_hmac(decrypted, tag)) + \"\\n\")\r\n\r\n    def clear_root(self):\r\n        for widget in self.root.winfo_children():\r\n            widget.destroy()\r\n\r\nif __name__ == \"__main__\":\r\n    AppVuelos()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/interfaz.py b/interfaz.py
+--- a/interfaz.py	(revision c346d2f4093e36ab32d1bbc290f422b84ba4a299)
++++ b/interfaz.py	(date 1760719904280)
+@@ -36,7 +36,8 @@
+         self.clear_root()
+         tk.Label(self.root, text=f"Usuario: {self.usuario_actual}").pack()
+         self.campos = {}
+-        for campo in ["numero_vuelo","nombre_pasajero","lugar_destino","lugar_llegada","hora_salida","hora_llegada"]:
++        for campo in ["numero_vuelo","nombre_pasajero","lugar_salida",
++                      "lugar_llegada","hora_salida","hora_llegada"]:
+             tk.Label(self.root, text=campo).pack()
+             entry = tk.Entry(self.root)
+             entry.pack()
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"f7e4bc40-26a3-4000-863e-94ba5dfba927\" name=\"Changes\" comment=\"\">\r\n      <change afterPath=\"$PROJECT_DIR$/interfaz.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_10_2025_12_16_[Changes]1/shelved.patch\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_10_2025_12_16__Changes_1.xml\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/cifrado_descifrado.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/cifrado_descifrado.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/etiquetas.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/etiquetas.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/usuarios.json\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/usuarios.json\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;100522245&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\r\n  \"selectedUrlAndAccountId\": {\r\n    \"url\": \"https://github.com/100522245/CRIPTO.git\",\r\n    \"accountId\": \"d789547a-7500-403f-a15a-74695b83cfac\"\r\n  }\r\n}]]></component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 3\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"33YCZrjyHvPrUN2HJOw9Gd0901l\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Python.autentificacion.executor\": \"Run\",\r\n    \"Python.cifrado_descifrado.executor\": \"Run\",\r\n    \"Python.interfaz.executor\": \"Run\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"git-widget-placeholder\": \"main\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\" selected=\"Python.interfaz\">\r\n    <configuration name=\"autentificacion\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"CRIPTO\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/autentificacion.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"cifrado_descifrado\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"CRIPTO\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/cifrado_descifrado.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"interfaz\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"CRIPTO\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/interfaz.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.interfaz\" />\r\n        <item itemvalue=\"Python.cifrado_descifrado\" />\r\n        <item itemvalue=\"Python.autentificacion\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-python-sdk-14705d77f0bb-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.25659.43\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"f7e4bc40-26a3-4000-863e-94ba5dfba927\" name=\"Changes\" comment=\"\" />\r\n      <created>1759484676835</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1759484676835</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision c346d2f4093e36ab32d1bbc290f422b84ba4a299)
++++ b/.idea/workspace.xml	(date 1760943792943)
+@@ -4,13 +4,9 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_10_2025_12_16_[Changes]1/shelved.patch" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_10_2025_12_16__Changes_1.xml" beforeDir="false" />
++    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="CASI COMPLETO">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/cifrado_descifrado.py" beforeDir="false" afterPath="$PROJECT_DIR$/cifrado_descifrado.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/etiquetas.py" beforeDir="false" afterPath="$PROJECT_DIR$/etiquetas.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/usuarios.json" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -34,12 +30,12 @@
+     &quot;assignee&quot;: &quot;100522245&quot;
+   }
+ }</component>
+-  <component name="GithubPullRequestsUISettings"><![CDATA[{
+-  "selectedUrlAndAccountId": {
+-    "url": "https://github.com/100522245/CRIPTO.git",
+-    "accountId": "d789547a-7500-403f-a15a-74695b83cfac"
+-  }
+-}]]></component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/100522245/CRIPTO.git&quot;,
++    &quot;accountId&quot;: &quot;d789547a-7500-403f-a15a-74695b83cfac&quot;
++  }
++}</component>
+   <component name="ProjectColorInfo">{
+   &quot;associatedIndex&quot;: 3
+ }</component>
+@@ -48,16 +44,16 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Python.autentificacion.executor": "Run",
+-    "Python.cifrado_descifrado.executor": "Run",
+-    "Python.interfaz.executor": "Run",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.git.unshallow": "true",
+-    "git-widget-placeholder": "main"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Python.autentificacion.executor&quot;: &quot;Run&quot;,
++    &quot;Python.cifrado_descifrado.executor&quot;: &quot;Run&quot;,
++    &quot;Python.interfaz.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;main&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RunManager" selected="Python.interfaz">
+     <configuration name="autentificacion" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+       <module name="CRIPTO" />
+@@ -149,6 +145,15 @@
+       <option name="presentableId" value="Default" />
+       <updated>1759484676835</updated>
+     </task>
++    <task id="LOCAL-00001" summary="CASI COMPLETO">
++      <option name="closed" value="true" />
++      <created>1760719740059</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1760719740059</updated>
++    </task>
++    <option name="localTasksCounter" value="2" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -162,4 +167,8 @@
+       </map>
+     </option>
+   </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="CASI COMPLETO" />
++    <option name="LAST_COMMIT_MESSAGE" value="CASI COMPLETO" />
++  </component>
+ </project>
+\ No newline at end of file

@@ -1,34 +1,3 @@
 {
-    "juan": {
-        "salt": "0db14764060d1dfec90c8b40659ad721",
-        "hash": "5cdc42c15e6f91dbf86a9d68955f83aa096cc9132a3239e46a235e1f6972e40b"
-    },
-    "Adrian": {
-        "salt": "d52a3faa411f976a545633db4dafb61f",
-        "hash": "7e96934fa49a33f5e0fb0dcb47b2112e71cac6d4ae01ca9d4e803c86c3b2a769"
-    },
-    "Chema": {
-        "salt": "13ec39d55642d27aaba438dc0274baa8",
-        "hash": "3ae4f6e62cf02a35317a464fecc53f2e1e110b767dc437665f92f6ca4e3c60c7"
-    },
-    "ivan7": {
-        "salt": "1a0672e62370a2d171652efaaad73583",
-        "hash": "febb809569273546df79a88fcdc0e5cb1d47b37f938419196fd68ebec6817328"
-    },
-    "ivan84": {
-        "salt": "79a16fcf5967b38150bfabc9dc217dd0",
-        "hash": "569a3d219de8c3896ddec962500ee839e9e792db77279736887790fed8a23751"
-    },
-    "ivan900": {
-        "salt": "0726aff5c8dc785e4815e9c1829d70a4",
-        "hash": "6954a01cfd28b54c093d70e78731bac52496ee1e6f19d85a64656c4ff0f3c11c"
-    },
-    "1234": {
-        "salt": "7d3050abf9f8e8dbb2f3833dd457b830",
-        "hash": "1e2a04b2aca16dd03fc62a289829cfab6bb40e1a051b48836fc9c7f2eb503788"
-    },
-    "12345": {
-        "salt": "c4f8f782fe2abc638dc1009af67981cc",
-        "hash": "20f324a6a8a9addb89b852a1af4f465d04e7f5ce94b3d423437d55b44e40646c"
-    }
+
 }

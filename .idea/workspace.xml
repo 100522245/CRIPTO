@@ -5,14 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="MODIFICACIÓN interfaz.py, autentificacion.py y cifrado_descifrado.py">
-      <change afterPath="$PROJECT_DIR$/eval1/regenerar_claves.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/eval1/test_cifrado.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/keys/ivan84/private.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/keys/ivan84/public.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservados.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/reservados.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/autentificacion.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/autentificacion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/etiquetas.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/regenerar_claves.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/test_cifrado.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +26,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="KEEP" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -49,21 +48,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.autentificacion.executor": "Run",
-    "Python.cifrado_descifrado (1).executor": "Run",
-    "Python.cifrado_descifrado.executor": "Run",
-    "Python.etiquetas.executor": "Run",
-    "Python.interfaz.executor": "Run",
-    "Python.regenerar_claves.executor": "Run",
-    "Python.test_cifrado.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.autentificacion.executor&quot;: &quot;Run&quot;,
+    &quot;Python.cifrado_descifrado (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.cifrado_descifrado.executor&quot;: &quot;Run&quot;,
+    &quot;Python.etiquetas.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interfaz.executor&quot;: &quot;Run&quot;,
+    &quot;Python.regenerar_claves.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_cifrado.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Python.interfaz">
     <configuration name="autentificacion" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CRIPTO" />
       <option name="ENV_FILES" value="" />
@@ -177,10 +176,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.interfaz" />
+        <item itemvalue="Python.autentificacion" />
         <item itemvalue="Python.cifrado_descifrado (1)" />
         <item itemvalue="Python.etiquetas" />
         <item itemvalue="Python.cifrado_descifrado" />
-        <item itemvalue="Python.autentificacion" />
       </list>
     </recent_temporary>
   </component>
@@ -240,7 +239,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761289220911</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Cambios mayoritariamente en comentarios y la interfaz">
+      <option name="closed" value="true" />
+      <created>1761511505549</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1761511505549</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -259,6 +266,7 @@
     <MESSAGE value="Cambios en la interfaz y Json reservados listo para cifrar" />
     <MESSAGE value="Cambio de un print" />
     <MESSAGE value="MODIFICACIÓN interfaz.py, autentificacion.py y cifrado_descifrado.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="MODIFICACIÓN interfaz.py, autentificacion.py y cifrado_descifrado.py" />
+    <MESSAGE value="Cambios mayoritariamente en comentarios y la interfaz" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cambios mayoritariamente en comentarios y la interfaz" />
   </component>
 </project>

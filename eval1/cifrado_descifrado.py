@@ -15,19 +15,19 @@ def generate_rsa_keypair(passphrase: bytes | None = None, key_size: int = 2048) 
     La clave pública se usará para cifrar la clave AES.
     La clave privada se usará para descifrarla (autenticación del destinatario).
     """
-    private_key = rsa.generate_private_key(
+    clave_privada = rsa.generate_private_key(
         public_exponent=65537,#Exponente estandar
         key_size=key_size,#Tamaño de la clave
         backend=default_backend()
     )
-    return private_key, private_key.public_key()
+    return clave_privada, clave_privada.public_key()
 
 
 
 # GUARDAR Y CARGAR CLAVES RSA
 def save_pem(key_or_pem: Union[rsa.RSAPrivateKey, rsa.RSAPublicKey, bytes, str],
              path: str,
-             password: bytes | None = None):
+             contrasena: bytes | None = None):
     """
     Guarda una clave (privada o pública) en formato PEM.
     Si es privada y tiene contraseña → se guarda cifrada.
@@ -36,8 +36,8 @@ def save_pem(key_or_pem: Union[rsa.RSAPrivateKey, rsa.RSAPublicKey, bytes, str],
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     # Si se pasa una contraseña como texto, la convertimos a bytes
-    if isinstance(password, str):
-        password = password.encode("utf-8")
+    if isinstance(contrasena, str):
+        contrasena = contrasena.encode("utf-8")
 
     # Si ya es PEM eb bytes o texto, lo guardamos directamente
     if isinstance(key_or_pem, (bytes, bytearray)):
@@ -48,8 +48,8 @@ def save_pem(key_or_pem: Union[rsa.RSAPrivateKey, rsa.RSAPublicKey, bytes, str],
     # Si es una clave privada RSA → la serializamos (y la ciframos si hay password)
     elif hasattr(key_or_pem, "private_bytes"):
         encryption = (
-            serialization.BestAvailableEncryption(password)
-            if password else serialization.NoEncryption()
+            serialization.BestAvailableEncryption(contrasena)
+            if contrasena else serialization.NoEncryption()
         )
         pem_bytes = key_or_pem.private_bytes(
             encoding=serialization.Encoding.PEM,
@@ -71,7 +71,7 @@ def save_pem(key_or_pem: Union[rsa.RSAPrivateKey, rsa.RSAPublicKey, bytes, str],
         f.write(pem_bytes)
 
 
-def load_pem(path: str, password: bytes | None = None):
+def load_pem(path: str, contrasena: bytes | None = None):
     """
     Carga una clave RSA desde un archivo PEM (privada o pública).
     Si está cifrada, requiere 'password'.
@@ -85,7 +85,8 @@ def load_pem(path: str, password: bytes | None = None):
 
     try:
         # Intentamos cargar como clave privada
-        return serialization.load_pem_private_key(data, password=password, backend=default_backend())
+        return serialization.load_pem_private_key(data, password=contrasena,
+                                                  backend=default_backend())
     except ValueError:
         #Si falla probamos la clave publica
         return serialization.load_pem_public_key(data, backend=default_backend())

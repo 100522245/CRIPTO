@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="MODIFICACIÓN interfaz.py, autentificacion.py y cifrado_descifrado.py">
-      <change beforePath="$PROJECT_DIR$/data/reservados.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/reservados.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/etiquetas.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/regenerar_claves.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/test_cifrado.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/keys/12345/private.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/keys/12345/public.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/autentificacion.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/autentificacion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,6 +266,7 @@
     <MESSAGE value="Cambio de un print" />
     <MESSAGE value="MODIFICACIÓN interfaz.py, autentificacion.py y cifrado_descifrado.py" />
     <MESSAGE value="Cambios mayoritariamente en comentarios y la interfaz" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cambios mayoritariamente en comentarios y la interfaz" />
+    <MESSAGE value="Interfaz cambiada" />
+    <option name="LAST_COMMIT_MESSAGE" value="Interfaz cambiada" />
   </component>
 </project>

@@ -12,14 +12,26 @@ RUTA_USUARIOS = "data/usuarios.json"
 def derivar_clave(contraseña: str, salt: bytes) -> bytes:
     """ Usamos Scrypt para derivar una clave de 32 bytes a partir de la
     contraseña y un salt """
-    kdf = Scrypt(salt=salt, length=32, n=2**14, r=8, p=1)
+    kdf = Scrypt(
+        salt=salt,
+        length=32,
+        n=2**14,
+        r=8,
+        p=1
+    )
     return kdf.derive(contraseña.encode("utf-8"))
 
 
 def verificar_clave(contraseña: str, salt: bytes, hash_guardado: bytes) -> bool:
     """ Verificamos si el hash de la contraseña introducida coincide con el
     hash almacenado """
-    kdf = Scrypt(salt=salt, length=32, n=2**14, r=8, p=1)
+    kdf = Scrypt(
+        salt=salt,
+        length=32,
+        n=2**14,
+        r=8,
+        p=1
+    )
     try:
         kdf.verify(contraseña.encode("utf-8"), hash_guardado)
         return True
@@ -52,8 +64,8 @@ def registrar(nombre: str, contraseña: str):
     user_dir = os.path.join("data/keys", nombre)
     os.makedirs(user_dir, exist_ok=True)
 
-    #Generamos claves RSA usando la contraseña como semilla
-    private_key, public_key = generate_rsa_keypair(contraseña.encode("utf-8"))
+    #Generamos claves RSA del usuario
+    private_key, public_key = generate_rsa_keypair()
 
     #Serializamos clave privada (cifrada con contraseña)
     private_pem = private_key.private_bytes(

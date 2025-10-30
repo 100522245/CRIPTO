@@ -9,7 +9,8 @@ from cryptography.hazmat.backends import default_backend
 
 
 #GENERACIÓN DE CLAVES RSA
-def generate_rsa_keypair(passphrase: bytes | None = None, key_size: int = 2048) -> Tuple[rsa.RSAPrivateKey, rsa.RSAPublicKey]:
+def generate_rsa_keypair(key_size: int = 2048) -> Tuple[rsa.RSAPrivateKey,
+rsa.RSAPublicKey]:
     """
     Genera un par de claves RSA (privada y pública).
     La clave pública se usará para cifrar la clave AES.
@@ -21,7 +22,6 @@ def generate_rsa_keypair(passphrase: bytes | None = None, key_size: int = 2048) 
         backend=default_backend()
     )
     return clave_privada, clave_privada.public_key()
-
 
 
 # GUARDAR Y CARGAR CLAVES RSA

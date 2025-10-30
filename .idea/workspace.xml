@@ -4,12 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="MODIFICACIÓN interfaz.py, autentificacion.py y cifrado_descifrado.py">
-      <change beforePath="$PROJECT_DIR$/data/reservados.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/reservados.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/etiquetas.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/regenerar_claves.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/test_cifrado.py" beforeDir="false" />
+    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Cambios mayoritariamente en comentarios y la interfaz">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_10_2025_9_03_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_10_2025_9_03__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/keys/Fire/private.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/keys/Fire/public.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Adrian_UX7777.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Alfonso_VY9911.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Alfonso_VY9911.json.tag" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/FireTracer_RY3030.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/FireTracer_RY3030.json.tag" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Fire_VY2045.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Hola_RY3030.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Juan_RY5009.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Juan_RY5009.json.tag" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Marcos Llorente_UX2121.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Marcos Llorente_UX2121.json.tag" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Marcos Llorente_VY9911.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Marcos Llorente_VY9911.json.tag" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Pepe_RY3030.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/Pepe_RY3030.json.tag" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/ivan84_RY5009.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservas/ivan84_RY5009.json.tag" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,7 +43,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RESET_MODE" value="KEEP" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -37,7 +54,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/100522245/CRIPTO.git&quot;,
-    &quot;accountId&quot;: &quot;d789547a-7500-403f-a15a-74695b83cfac&quot;
+    &quot;accountId&quot;: &quot;7c11c034-2fce-4e58-b5fc-290d7625e422&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -186,7 +203,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-14705d77f0bb-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.25659.43" />
+        <option value="bundled-python-sdk-b030e9c4a83c-d902c0275401-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-252.26199.168" />
       </set>
     </attachedChunks>
   </component>
@@ -247,7 +264,23 @@
       <option name="project" value="LOCAL" />
       <updated>1761511505549</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Cambios mayoritariamente en comentarios y la interfaz">
+      <option name="closed" value="true" />
+      <created>1761511850823</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1761511850823</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Cambios mayoritariamente en comentarios y la interfaz">
+      <option name="closed" value="true" />
+      <created>1761511892051</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1761511892051</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

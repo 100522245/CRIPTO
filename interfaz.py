@@ -1,10 +1,11 @@
 # interfaz_vuelos.py
 """
-Interfaz completa para:
+Interfaz:
 - Registro / Login (registro extendido con nombre/email/fecha)
 - Listado de vuelos (esencial)
 - Reservar (crea archivo cifrado + registro resumido en reservados.json)
-- Ver "Mis reservas" (resumen) y DESCIFRAR reserva seleccionada (muestra JSON claro)
+- Ver "Mis reservas" (resumen) — sin opción de descifrar desde la UI
+- ✨ Sin tercer cuadro de salida (eliminado)
 """
 
 import os
@@ -12,11 +13,12 @@ import json
 import random
 import re
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox
+from tkinter import ttk
 
 # Importa tus módulos (ajusta 'eval1' si tu estructura es distinta)
 from eval1 import autentificacion as auth
-from eval1 import cifrado_descifrado as crypto
+from eval1 import cifrado_descifrado as crypto  # se sigue usando al reservar (cifrado)
 
 # Rutas
 RUTA_VUELOS = "data/vuelos.json"
@@ -74,10 +76,6 @@ def ruta_public_key(usuario: str) -> str:
     return os.path.join(RUTA_KEYS, usuario, "public.pem")
 
 
-def ruta_private_key(usuario: str) -> str:
-    return os.path.join(RUTA_KEYS, usuario, "private.pem")
-
-
 def ruta_reserva_cifrada(usuario: str, numero_vuelo: str) -> str:
     os.makedirs(RUTA_RESERVAS_CIF, exist_ok=True)
     filename = f"{usuario}_{numero_vuelo}.json"
@@ -111,14 +109,12 @@ def reservar_vuelo(numero_vuelo: str, usuario: str):
     2) Guarda archivo cifrado en data/reservas/<usuario>_<numero_vuelo>.json.
     3) Añade entrada resumida en data/reservados.json con:
        { "usuario", "numero_vuelo", "asiento", "business", "hora_embarque" }
-    Nota: guardamos 'numero_vuelo' en el resumen para poder localizar el fichero cifrado
-          cuando el usuario quiera DESCIFRAR su reserva.
     """
     vuelo = vuelo_por_numero(numero_vuelo)
     if not vuelo:
         return False, "Vuelo no encontrado."
 
-    # Evitar doble reserva: comprobación sencilla (si ya existe resumen con mismo vuelo)
+    # Evitar doble reserva del mismo vuelo (simplificado)
     if any(str(r.get("numero_vuelo")) == str(numero_vuelo) for r in reservas_todas()):
         return False, "El vuelo ya está reservado."
 
@@ -130,9 +126,8 @@ def reservar_vuelo(numero_vuelo: str, usuario: str):
     with open(pub_path, "rb") as f:
         public_pem = f.read()
 
-    # Asignar asiento y business (aquí automático; podrías preguntar al usuario si quieres)
+    # Asignar asiento y business (aleatorio)
     asiento = _siguiente_asiento_libre(numero_vuelo)
-    # Simulación: probabilísticamente asignamos business (por ejemplo, filas 1-5 son business)
     business = random.choice([True, False])
     hora_embarque = vuelo.get("hora_salida", "")
 
@@ -146,7 +141,6 @@ def reservar_vuelo(numero_vuelo: str, usuario: str):
     reserva_bytes = json.dumps(reserva_plana, ensure_ascii=False).encode("utf-8")
 
     # Cifrado autenticado (AES-GCM) + encapsulado de clave AES con RSA-OAEP
-    # Puedes pasar un AAD si quieres ligar al usuario/numero_vuelo:
     aad = f"usuario={usuario}|vuelo={numero_vuelo}".encode("utf-8")
     reserva_cifrada = crypto.encrypt_reserva(reserva_bytes, public_pem, aad=aad)
 
@@ -155,10 +149,10 @@ def reservar_vuelo(numero_vuelo: str, usuario: str):
     with open(ruta_cif, "wb") as f:
         f.write(reserva_cifrada)
 
-    # Guardamos resumen en reservados.json (solo lo esencial + numero_vuelo para enlace al archivo)
+    # Guardamos resumen en reservados.json (solo lo esencial + numero_vuelo para enlace interno)
     resumen = {
         "usuario": usuario,
-        "numero_vuelo": numero_vuelo,    # necesario internamente para localizar el fichero cifrado
+        "numero_vuelo": numero_vuelo,
         "asiento": asiento,
         "business": business,
         "hora_embarque": hora_embarque
@@ -175,13 +169,26 @@ class AppVuelos:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Gestión Vuelos / Reservas (AES-GCM + RSA-OAEP)")
-        self.root.geometry("920x640")
+        self.root.geometry("900x600")
+        self.root.minsize(820, 520)
         self.usuario_actual = None
+
+        # Estilos bonitos con ttk
+        self.style = ttk.Style()
+        try:
+            self.style.theme_use("clam")
+        except tk.TclError:
+            pass
+        self.style.configure("TLabel", font=("Segoe UI", 10))
+        self.style.configure("Title.TLabel", font=("Segoe UI", 12, "bold"))
+        self.style.configure("Header.TLabelframe.Label", font=("Segoe UI", 11, "bold"))
+        self.style.configure("TButton", font=("Segoe UI", 10), padding=6)
+        self.style.configure("TLabelframe", padding=10)
+        self.root.configure(bg="#f3f4f6")
 
         # Widgets que usaremos
         self.listbox_vuelos = None
         self.listbox_reservas = None
-        self.output_text = None
 
         self.build_login()
         self.root.mainloop()
@@ -190,25 +197,37 @@ class AppVuelos:
     def build_login(self):
         self.clear_root()
 
-        tk.Label(self.root, text="Usuario:", font=("Segoe UI", 10)).pack(pady=(12, 2))
-        self.usuario_entry = tk.Entry(self.root)
-        self.usuario_entry.pack()
+        container = ttk.Frame(self.root, padding=20)
+        container.pack(expand=True)
 
-        tk.Label(self.root, text="Contraseña:", font=("Segoe UI", 10)).pack(pady=(8, 2))
-        self.pass_entry = tk.Entry(self.root, show="*")
-        self.pass_entry.pack()
+        ttk.Label(container, text="Iniciar sesión", style="Title.TLabel").pack(pady=(0, 10))
 
-        btns = tk.Frame(self.root)
+        form = ttk.Frame(container)
+        form.pack()
+
+        ttk.Label(form, text="Usuario:").grid(row=0, column=0, sticky="e", padx=6, pady=6)
+        self.usuario_entry = ttk.Entry(form, width=28)
+        self.usuario_entry.grid(row=0, column=1, sticky="w", padx=6, pady=6)
+
+        ttk.Label(form, text="Contraseña:").grid(row=1, column=0, sticky="e", padx=6, pady=6)
+        self.pass_entry = ttk.Entry(form, show="*", width=28)
+        self.pass_entry.grid(row=1, column=1, sticky="w", padx=6, pady=6)
+
+        btns = ttk.Frame(container)
         btns.pack(pady=12)
-        tk.Button(btns, text="Iniciar sesión", command=self.login).grid(row=0, column=0, padx=6)
-        tk.Button(btns, text="Registrar (nuevo)", command=self.build_register_form).grid(row=0, column=1, padx=6)
+        ttk.Button(btns, text="Iniciar sesión", command=self.login).grid(row=0, column=0, padx=6)
+        ttk.Button(btns, text="Registrar (nuevo)", command=self.build_register_form).grid(row=0, column=1, padx=6)
 
     def build_register_form(self):
         """Formulario de registro extendido (usuario, contraseña, nombre, email, fecha_nac)."""
         self.clear_root()
-        tk.Label(self.root, text="Registro de usuario", font=("Segoe UI", 12, "bold")).pack(pady=10)
 
-        form = tk.Frame(self.root)
+        container = ttk.Frame(self.root, padding=20)
+        container.pack(expand=True, fill="both")
+
+        ttk.Label(container, text="Registro de usuario", style="Title.TLabel").pack(pady=10)
+
+        form = ttk.Frame(container)
         form.pack(pady=6)
 
         labels = [
@@ -220,16 +239,16 @@ class AppVuelos:
         ]
         self.reg_entries = {}
         for i, (texto, clave) in enumerate(labels):
-            tk.Label(form, text=texto).grid(row=i, column=0, sticky="e", padx=6, pady=4)
+            ttk.Label(form, text=texto).grid(row=i, column=0, sticky="e", padx=6, pady=4)
             show = "*" if clave == "password" else None
-            e = tk.Entry(form, show=show)
+            e = ttk.Entry(form, show=show, width=32)
             e.grid(row=i, column=1, sticky="w", padx=6, pady=4)
             self.reg_entries[clave] = e
 
-        btns = tk.Frame(self.root)
+        btns = ttk.Frame(container)
         btns.pack(pady=12)
-        tk.Button(btns, text="Crear cuenta", command=self.registrar_extendido).grid(row=0, column=0, padx=6)
-        tk.Button(btns, text="Volver", command=self.build_login).grid(row=0, column=1, padx=6)
+        ttk.Button(btns, text="Crear cuenta", command=self.registrar_extendido).grid(row=0, column=0, padx=6)
+        ttk.Button(btns, text="Volver", command=self.build_login).grid(row=0, column=1, padx=6)
 
     def registrar_extendido(self):
         """Registra credenciales con auth.registrar() y añade metadatos al JSON de usuarios."""
@@ -278,49 +297,46 @@ class AppVuelos:
     def build_panel(self):
         self.clear_root()
 
-        tk.Label(self.root, text=f"Usuario: {self.usuario_actual}", font=("Segoe UI", 12, "bold")).pack(pady=6)
+        header = ttk.Frame(self.root, padding=(12, 8))
+        header.pack(fill="x")
+        ttk.Label(header, text=f"Usuario: {self.usuario_actual}", style="Title.TLabel").pack(side="left")
 
         # Marco superior: Vuelos disponibles (esencial)
-        marco_sup = tk.LabelFrame(self.root, text="Vuelos disponibles (esencial)", padx=8, pady=6)
-        marco_sup.pack(fill="both", expand=True, padx=10, pady=(6, 3))
+        marco_sup = ttk.Labelframe(self.root, text="Vuelos disponibles (esencial)", style="Header.TLabelframe")
+        marco_sup.pack(fill="both", expand=True, padx=12, pady=(6, 4))
 
-        frame_sup = tk.Frame(marco_sup)
+        frame_sup = ttk.Frame(marco_sup)
         frame_sup.pack(fill="both", expand=True)
 
-        sb1 = tk.Scrollbar(frame_sup)
+        sb1 = ttk.Scrollbar(frame_sup)
         sb1.pack(side="right", fill="y")
 
-        self.listbox_vuelos = tk.Listbox(frame_sup, height=10, yscrollcommand=sb1.set, selectmode=tk.SINGLE)
+        self.listbox_vuelos = tk.Listbox(frame_sup, height=10, yscrollcommand=sb1.set, selectmode=tk.SINGLE, font=("Segoe UI", 10))
         self.listbox_vuelos.pack(side="left", fill="both", expand=True)
         sb1.config(command=self.listbox_vuelos.yview)
 
-        btns_sup = tk.Frame(marco_sup)
-        btns_sup.pack(pady=6)
-        tk.Button(btns_sup, text="Reservar seleccionado", command=self.reservar_seleccionado).grid(row=0, column=0, padx=6)
-        tk.Button(btns_sup, text="Refrescar", command=self.refrescar_listas).grid(row=0, column=1, padx=6)
+        btns_sup = ttk.Frame(marco_sup)
+        btns_sup.pack(pady=8)
+        ttk.Button(btns_sup, text="Reservar seleccionado", command=self.reservar_seleccionado).grid(row=0, column=0, padx=6)
+        ttk.Button(btns_sup, text="Refrescar", command=self.refrescar_listas).grid(row=0, column=1, padx=6)
 
         # Marco inferior: Mis reservas (resumen)
-        marco_inf = tk.LabelFrame(self.root, text="Mis reservas (resumen)", padx=8, pady=6)
-        marco_inf.pack(fill="both", expand=True, padx=10, pady=(3, 6))
+        marco_inf = ttk.Labelframe(self.root, text="Mis reservas (resumen)", style="Header.TLabelframe")
+        marco_inf.pack(fill="both", expand=True, padx=12, pady=(4, 12))
 
-        frame_inf = tk.Frame(marco_inf)
+        frame_inf = ttk.Frame(marco_inf)
         frame_inf.pack(fill="both", expand=True)
 
-        sb2 = tk.Scrollbar(frame_inf)
+        sb2 = ttk.Scrollbar(frame_inf)
         sb2.pack(side="right", fill="y")
 
-        self.listbox_reservas = tk.Listbox(frame_inf, height=10, yscrollcommand=sb2.set, selectmode=tk.SINGLE)
+        self.listbox_reservas = tk.Listbox(frame_inf, height=10, yscrollcommand=sb2.set, selectmode=tk.SINGLE, font=("Segoe UI", 10))
         self.listbox_reservas.pack(side="left", fill="both", expand=True)
         sb2.config(command=self.listbox_reservas.yview)
 
-        btns_inf = tk.Frame(marco_inf)
-        btns_inf.pack(pady=6)
-        tk.Button(btns_inf, text="Descifrar reserva seleccionada", command=self.descifrar_reserva_seleccionada).grid(row=0, column=0, padx=6)
-        tk.Button(btns_inf, text="Cerrar sesión", command=self.logout).grid(row=0, column=1, padx=6)
-
-        # Panel de salida
-        self.output_text = tk.Text(self.root, height=10)
-        self.output_text.pack(fill="both", expand=False, padx=10, pady=6)
+        btns_inf = ttk.Frame(marco_inf)
+        btns_inf.pack(pady=8)
+        ttk.Button(btns_inf, text="Cerrar sesión", command=self.logout).grid(row=0, column=0, padx=6)
 
         # Carga inicial
         self.refrescar_listas()
@@ -338,7 +354,7 @@ class AppVuelos:
         self.build_login()
 
     def refrescar_listas(self):
-        # Vuelos (arriba): mostramos "numero | fecha · hora_salida | origen → destino"
+        # Vuelos (arriba): "numero | fecha · hora_salida | origen → destino"
         self.listbox_vuelos.delete(0, tk.END)
         vuelos = vuelos_disponibles()
         if not vuelos:
@@ -353,7 +369,7 @@ class AppVuelos:
                 estado = " (RESERVADO)" if any(str(r.get("numero_vuelo")) == str(num) for r in reservas_todas()) else ""
                 self.listbox_vuelos.insert(tk.END, f"{num} | {fecha} · {hs} | {o} → {d}{estado}")
 
-        # --- Mis reservas (abajo): "num | fecha · salida-llegada (embarque) | origen→destino | asiento | Business" ---
+        # Mis reservas (abajo): "num | fecha · salida-llegada (embarque) | origen→destino | asiento | Business"
         self.listbox_reservas.delete(0, tk.END)
         mis = reservas_de_usuario(self.usuario_actual)
         if not mis:
@@ -361,25 +377,22 @@ class AppVuelos:
         else:
             for r in mis:
                 num = r.get("numero_vuelo", "N/A")
-                fecha = r.get("fecha",
-                              "")  # si lo guardas en el resumen; si no, lo tomamos del vuelo
+                fecha = r.get("fecha", "")
                 hora_emb = r.get("hora_embarque", "")
                 v = vuelo_por_numero(num) or {}
                 o = v.get("lugar_origen", "")
                 d = v.get("lugar_destino", "")
                 hs = v.get("hora_salida", "")
-                hl = v.get("hora_llegada", "")  # 🔹 añadimos hora de llegada
+                hl = v.get("hora_llegada", "")
                 asiento = r.get("asiento", "-")
                 biz = "Sí" if r.get("business") else "No"
-
-                # Si no guardas 'fecha' en el resumen, la cogemos del vuelo:
                 if not fecha:
                     fecha = v.get("fecha", "")
-
                 self.listbox_reservas.insert(
                     tk.END,
                     f"{num} | {fecha} · {hs}-{hl} (embarque {hora_emb}) | {o} → {d} | asiento: {asiento} | Business: {biz}"
                 )
+
     def reservar_seleccionado(self):
         sel = self.listbox_vuelos.curselection()
         if not sel:
@@ -392,74 +405,8 @@ class AppVuelos:
         if ok:
             messagebox.showinfo("Reserva", msg)
             self.refrescar_listas()
-            self.output_text.insert(tk.END, f"✅ {msg}\n")
         else:
             messagebox.showerror("Reserva", msg)
-
-    def mostrar_mis_reservas(self):
-        # simple: refrescar y mostrar en panel de salida
-        self.refrescar_listas()
-        mis = reservas_de_usuario(self.usuario_actual)
-        self.output_text.delete("1.0", tk.END)
-        if not mis:
-            self.output_text.insert(tk.END, "No tienes reservas.\n")
-            return
-        for r in mis:
-            num = r.get("numero_vuelo")
-            asiento = r.get("asiento")
-            biz = "Sí" if r.get("business") else "No"
-            hora = r.get("hora_embarque")
-            self.output_text.insert(tk.END, f"- Vuelo {num} | Asiento: {asiento} | Business: {biz} | Embarque: {hora}\n")
-
-    # ------------- DESCIFRAR RESERVA -------------
-    def descifrar_reserva_seleccionada(self):
-        sel = self.listbox_reservas.curselection()
-        if not sel:
-            messagebox.showwarning("Descifrar", "Selecciona una reserva (abajo).")
-            return
-        linea = self.listbox_reservas.get(sel[0])
-        numero_vuelo = linea.split("|")[0].strip()
-
-        # Localizamos el fichero cifrado
-        ruta_cif = ruta_reserva_cifrada(self.usuario_actual, numero_vuelo)
-        if not os.path.exists(ruta_cif):
-            messagebox.showerror("Descifrar", f"No existe el fichero cifrado esperado:\n{ruta_cif}")
-            return
-
-        # Pedimos la passphrase para desbloquear la clave privada
-        passphrase = simpledialog.askstring("Contraseña clave privada", "Introduce la contraseña de tu clave privada:", show="*")
-        if passphrase is None or passphrase == "":
-            return
-
-        # Cargamos la clave privada protegida
-        priv_path = ruta_private_key(self.usuario_actual)
-        if not os.path.exists(priv_path):
-            messagebox.showerror("Descifrar", f"No se encontró tu clave privada: {priv_path}")
-            return
-
-        with open(priv_path, "rb") as f:
-            private_pem = f.read()
-
-        # Leemos el fichero cifrado
-        with open(ruta_cif, "rb") as f:
-            encrypted_json = f.read()
-
-        # Intentamos descifrar (decrypt_reserva lanza excepción si falla autenticación)
-        try:
-            claro = crypto.decrypt_reserva(encrypted_json, private_pem, passphrase.encode("utf-8"))
-        except Exception as e:
-            messagebox.showerror("Descifrar", f"Error al descifrar: {e}")
-            return
-
-        # Mostramos JSON claro en el panel de salida
-        try:
-            texto = claro.decode("utf-8")
-        except Exception:
-            texto = repr(claro)
-
-        self.output_text.delete("1.0", tk.END)
-        self.output_text.insert(tk.END, "📄 Reserva descifrada (contenido completo):\n")
-        self.output_text.insert(tk.END, texto + "\n")
 
     # ------------- UTILIDADES UI -------------
     def clear_root(self):

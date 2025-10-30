@@ -1,8 +1,0 @@
-{
-  "algorithm": "AES-GCM+RSA-OAEP",
-  "aes_key_encrypted": "Twaey7FLaVNCttALhSxOpwvEclDZxtxvNmjUUCZeNZpPf/V3jlzhUSAvOU3O1wQ5OQzreTjgrKx9kKH6KPPW9hmhr3DkHk+QCHcS88l/urA4+P7IZ9udADG6PflDlwUywFkdNpSrCPXHFXvXGzQehfr2fr0WwmnzXsioJS2OPfmRhFAcxcNIWutNN9++iCk+oat4+6bd5Rp3q+d03TUM88MMdHEoG0K8dY9UPRE0uDA+w/ygGAv1MJWGQlUd6zTYTQmfuFmrGKyfZw8IV6j18LQj2a+JnQ2qa1MJrchkCKPY+5JetIIiaVRbtvZ3dQsC9Oqm1JS9cQwYyNmXjQMFUw==",
-  "nonce": "RbrPPN/QZ58oz17K",
-  "ciphertext": "75CSFxDmSuSIc4BpNyY0y7U3Dha8+kBKEGtLeT2Yxy3PxwiCdN1A4gJx4k8Dk1xMAB5H96Q5NX/0c5+EDpM1PwRBHXAb0gu+Na6hcX4aTlGkc1zsSVEsLrpg/PfZZ3y+CH+dGAmHpgNep2hqSQVLqQT1bHYWz9SIL0HKDU9Fv16GPDYwhEF3ftIA7PY39rkK0NUsL6h7K5sUCJzUvIJEaL/ml59EgE7wsNBDhgeCO/zIaNejwdMxfl/2uXlx0BJYfcL95H/YwXAxFT9Qjq8x+WD+iqyUQGPRAV3HUednZg==",
-  "aad": "",
-  "aes_key_length": 256
-}

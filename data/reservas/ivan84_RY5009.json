@@ -1,8 +1,0 @@
-{
-  "algorithm": "AES-GCM+RSA-OAEP",
-  "aes_key_encrypted": "m42RR4WGRmwlXZvixcrRZplxENoUao902CCpfSIEvSotkbGgOIZJx6lyMXOCITOKzfmnUf/AUWupEqfAckgiV3fDMJtgjltUug8fd88CfkeHC7DfSYMAeZR63ausXQso5gA1KZPsw84uc9L9sFVuosSWIa6Ey5IWuvuqQQqOp1X4hlZzlShhhdJBvn8/ckEh1hoeYZjTbVPmCFmNCEVG+axURsh13ZDOVJK+LicSmbjk/+GdDlaSEI6ZGdwVqFB5jhmeqsnPMZfeTGNOChXJBjCr4Vxk8cL5fB8rVqJnA2sVmsAw38rr16mLazjqUb8IjYn9js3v7paMJsJywIYA4g==",
-  "nonce": "DwO+cWjELZBbbn/5",
-  "ciphertext": "maOPQt8Id0sQAcTjyEVbAn0CzFgHR8Lxh844jskcumlzhEMO/DKPd/iYgHjwGCp/mCcCVm0PJxPt97+5wONgc748lQXSscy2SdAt7EjIZV/y8WjMjDb1cPW6GVe+V12wZR5JTezJLA/eppdTLhqZp1BwRsNnTv9z9lOSw8nX0wNFHuZZWCYTKl4uMUAYzmNB+f8lCETl/rPWxIQS8DvEO+H5yTDSMLJTA3PaOJE6MJxTCzmuwXRMUemHXKpfbsfVEiDqn9s7WRH5syViWXsbe3yPOmg=",
-  "aad": "",
-  "aes_key_length": 256
-}

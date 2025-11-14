@@ -4,12 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="MODIFICACIÓN interfaz.py, autentificacion.py y cifrado_descifrado.py">
+    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Correccion de detalles">
+      <change afterPath="$PROJECT_DIR$/eval2/firma.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_10_2025_11_21_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_10_2025_11_21__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_29_10_2025_12_04_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_29_10_2025_12_04__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/keys/12345/private.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/keys/12345/public.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/reservados.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eval1/autentificacion.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/autentificacion.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/data/keys/1234/private.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/data/keys/1234/public.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/data/keys/12345/private.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/data/keys/12345/public.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/data/keys/ivan900/private.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval1/data/keys/ivan900/public.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +48,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/100522245/CRIPTO.git&quot;,
-    &quot;accountId&quot;: &quot;d789547a-7500-403f-a15a-74695b83cfac&quot;
+    &quot;accountId&quot;: &quot;7c11c034-2fce-4e58-b5fc-290d7625e422&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -185,7 +197,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-14705d77f0bb-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.25659.43" />
+        <option value="bundled-python-sdk-b030e9c4a83c-d902c0275401-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-252.26199.168" />
       </set>
     </attachedChunks>
   </component>
@@ -246,7 +258,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761511505549</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Correccion de detalles">
+      <option name="closed" value="true" />
+      <created>1761840080650</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1761840080650</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -267,6 +287,7 @@
     <MESSAGE value="MODIFICACIÓN interfaz.py, autentificacion.py y cifrado_descifrado.py" />
     <MESSAGE value="Cambios mayoritariamente en comentarios y la interfaz" />
     <MESSAGE value="Interfaz cambiada" />
-    <option name="LAST_COMMIT_MESSAGE" value="Interfaz cambiada" />
+    <MESSAGE value="Correccion de detalles" />
+    <option name="LAST_COMMIT_MESSAGE" value="Correccion de detalles" />
   </component>
 </project>

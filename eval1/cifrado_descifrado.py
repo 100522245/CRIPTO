@@ -6,6 +6,8 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
 
 
 #GENERACIÓN DE CLAVES RSA
@@ -90,6 +92,29 @@ def load_pem(path: str, contrasena: bytes | None = None):
     except ValueError:
         #Si falla probamos la clave publica
         return serialization.load_pem_public_key(data, backend=default_backend())
+
+#FIRMA DEL MENSAJE ANTES DE CIFRARLO
+def firmar_mensaje(mensaje: bytes, rsa_private_pem: bytes, passphrase: bytes | None = None) -> bytes:
+    """
+    Firma un mensaje usando RSA-PSS con SHA256.
+    Devuelve la firma como bytes.
+    """
+    private_key = serialization.load_pem_private_key(
+        rsa_private_pem,
+        password=passphrase,
+        backend=default_backend()
+    )
+
+    firma = private_key.sign(
+        mensaje,
+        padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()),
+            salt_length=padding.PSS.MAX_LENGTH
+        ),
+        hashes.SHA256()
+    )
+
+    return firma
 
 
 # CIFRADO Y DESCIFRADO DE DATOS (AES-GCM + RSA-OAEP)
@@ -187,3 +212,29 @@ def decrypt_reserva(encrypted_json: bytes, rsa_private_pem: bytes, passphrase: b
         return plaintext
     except Exception as e:
         raise ValueError("Error al descifrar el contenido AES-GCM") from e
+    
+
+#VERIFICAMOS FIRMA CON EL MENSAJE DESCIFRADO
+def verificar_firma_mensaje(mensaje: bytes, firma: bytes, rsa_public_pem: bytes) -> bool:
+    """
+    Verifica una firma RSA-PSS con SHA256.
+    Devuelve True si la firma es válida, False si no.
+    """
+    public_key = serialization.load_pem_public_key(
+        rsa_public_pem,
+        backend=default_backend()
+    )
+
+    try:
+        public_key.verify(
+            firma,
+            mensaje,
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+            ),
+            hashes.SHA256()
+        )
+        return True
+    except Exception:
+        return False

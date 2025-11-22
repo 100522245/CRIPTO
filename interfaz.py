@@ -97,27 +97,43 @@ def crear_reserva(usuario: str, numero_vuelo: str, passphrase: bytes):
     Guarda en disco como:
       data/reservas/<usuario>/reservaN.json
     """
+    from cryptography import x509
+    from cryptography.hazmat.primitives import serialization
+
     vuelo = vuelo_por_numero(numero_vuelo)
     if not vuelo:
         return False, "Vuelo no encontrado."
 
-    # Cargar clave pública y privada del usuario
-    ruta_pub = os.path.join(RUTA_KEYS, usuario, "public.pem")
+    # Cargar CERTIFICADO del usuario, NO public.pem
+    ruta_cert = os.path.join(RUTA_KEYS, usuario, "cert.pem")
     ruta_priv = os.path.join(RUTA_KEYS, usuario, "private.pem")
-    if not os.path.exists(ruta_pub) or not os.path.exists(ruta_priv):
-        return False, "No se encontraron las claves RSA del usuario."
 
-    with open(ruta_pub, "rb") as f:
-        public_pem = f.read()
+    if not os.path.exists(ruta_cert) or not os.path.exists(ruta_priv):
+        return False, "No se encontró el certificado o la clave privada del usuario."
+
+    # Cargar certificado y extraer la clave pública
+    with open(ruta_cert, "rb") as f:
+        cert_pem = f.read()
+
+    cert = x509.load_pem_x509_certificate(cert_pem)
+    public_key = cert.public_key()
+
+    # Convertimos la public key a PEM (para pasarla al módulo de cifrado)
+    public_pem = public_key.public_bytes(
+        serialization.Encoding.PEM,
+        serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+
+    # Cargar clave privada cifrada del usuario
     with open(ruta_priv, "rb") as f:
         private_pem = f.read()
 
-    # Asignamos asiento y clase business (simplificado)
+    # Asignación de asiento
+    import random
     columnas = "ABCDEF"
     asiento = f"{random.randint(1, 40)}{random.choice(columnas)}"
     business = random.choice([True, False])
 
-    # Construimos la reserva EN CLARO (solo en memoria)
     reserva_plana = {
         "usuario": usuario,
         "numero_vuelo": numero_vuelo,
@@ -127,19 +143,17 @@ def crear_reserva(usuario: str, numero_vuelo: str, passphrase: bytes):
         "hora_embarque": vuelo.get("hora_salida", "")
     }
 
-    # Pasamos a bytes para firmar y cifrar
     datos_bytes = json.dumps(reserva_plana, ensure_ascii=False).encode("utf-8")
 
-    # --- FIRMA DIGITAL DEL MENSAJE EN CLARO (ANTES DE CIFRAR) ---
+    # Firmar en claro
     firma = crypto.firmar_mensaje(datos_bytes, private_pem, passphrase=passphrase)
 
-    # AAD (datos asociados, no secretos pero autenticados)
     aad = f"usuario={usuario}|vuelo={numero_vuelo}".encode("utf-8")
 
-    # Cifrado híbrido (AES-GCM + RSA-OAEP), incluyendo la FIRMA en el JSON
+    # Cifrado híbrido
     cifrado_bytes = crypto.encrypt_reserva(datos_bytes, public_pem, aad=aad, firma=firma)
 
-    # Guardamos como reservaN.json
+    # Guardado
     user_dir = dir_reservas_usuario(usuario)
     indice = siguiente_indice_reserva(usuario)
     ruta_out = os.path.join(user_dir, f"reserva{indice}.json")
@@ -147,7 +161,8 @@ def crear_reserva(usuario: str, numero_vuelo: str, passphrase: bytes):
     with open(ruta_out, "wb") as f:
         f.write(cifrado_bytes)
 
-    return True, "Reserva realizada correctamente (cifrada y firmada)."
+    return True, "Reserva realizada correctamente (cifrada y firmada con certificado)."
+
 
 
 # ---------------------------------------------------------------------------
@@ -155,25 +170,37 @@ def crear_reserva(usuario: str, numero_vuelo: str, passphrase: bytes):
 # ---------------------------------------------------------------------------
 def cargar_reservas_descifradas(usuario: str, passphrase: bytes):
     """
-    Lee todos los ficheros reservaN.json de data/reservas/<usuario>,
-    los descifra con la clave privada RSA del usuario y devuelve
-    una lista de dicts con las reservas en claro,
-    añadiendo info sobre la validez de la firma digital.
+    Descifra todas las reservas del usuario usando su clave privada,
+    y verifica las firmas con la clave pública extraída del certificado cert.pem.
     """
+    from cryptography import x509
+    from cryptography.hazmat.primitives import serialization
+
     if passphrase is None:
         raise ValueError("Se requiere la contraseña para descifrar las reservas.")
 
     ruta_priv = os.path.join(RUTA_KEYS, usuario, "private.pem")
-    ruta_pub = os.path.join(RUTA_KEYS, usuario, "public.pem")
-    if not os.path.exists(ruta_priv) or not os.path.exists(ruta_pub):
-        raise FileNotFoundError("No se encontraron las claves del usuario.")
+    ruta_cert = os.path.join(RUTA_KEYS, usuario, "cert.pem")
 
+    if not os.path.exists(ruta_priv) or not os.path.exists(ruta_cert):
+        raise FileNotFoundError("Falta la clave privada o el certificado del usuario.")
+
+    # Cargar certificado del usuario
+    with open(ruta_cert, "rb") as f:
+        cert_pem = f.read()
+
+    cert = x509.load_pem_x509_certificate(cert_pem)
+    public_key = cert.public_key()
+
+    # Convertimos la clave pública a bytes PEM (para el verificador)
+    public_pem = public_key.public_bytes(
+        serialization.Encoding.PEM,
+        serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+
+    # Cargar clave privada
     with open(ruta_priv, "rb") as f:
         private_pem = f.read()
-    with open(ruta_pub, "rb") as f:
-        public_pem = f.read()
-
-    public_key = serialization.load_pem_public_key(public_pem)
 
     carpeta = dir_reservas_usuario(usuario)
     reservas = []
@@ -186,30 +213,22 @@ def cargar_reservas_descifradas(usuario: str, passphrase: bytes):
         with open(ruta, "rb") as f:
             cifrado = f.read()
 
-        # Descifrar → obtenemos (plaintext, firma)
+        # Descifrar
         plano_bytes, firma = crypto.decrypt_reserva(cifrado, private_pem, passphrase)
 
         reserva = json.loads(plano_bytes.decode("utf-8"))
 
-        tiene_firma = firma is not None
         firma_valida = False
-
-        if tiene_firma:
+        if firma:
             firma_valida = crypto.verificar_firma_mensaje(plano_bytes, firma, public_pem)
 
-        # Log en consola con algoritmo y tamaño de clave
-        print(
-            f"[DEBUG] Verificación firma {archivo}: "
-            f"algoritmo RSA-PSS + SHA256, clave {public_key.key_size} bits → "
-            f"{'VÁLIDA' if firma_valida else ('SIN FIRMA' if not tiene_firma else 'NO VÁLIDA')}"
-        )
-
-        reserva["_tiene_firma"] = tiene_firma
+        reserva["_tiene_firma"] = firma is not None
         reserva["_firma_valida"] = firma_valida
 
         reservas.append(reserva)
 
     return reservas
+
 
 
 # ---------------------------------------------------------------------------

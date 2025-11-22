@@ -4,6 +4,9 @@ from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.exceptions import InvalidKey
 from cryptography.hazmat.primitives import serialization
 from eval1.cifrado_descifrado import generate_rsa_keypair
+from cryptography import x509
+from cryptography.x509.oid import NameOID
+from cryptography.hazmat.primitives import hashes
 
 # Archivo donde se guardan los usuarios, sus salt y hash de contraseña
 RUTA_USUARIOS = "data/usuarios.json"

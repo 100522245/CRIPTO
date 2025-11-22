@@ -89,10 +89,6 @@ def load_pem(path: str, contrasena: bytes | None = None):
 # ==================== FIRMA DIGITAL ====================
 
 def firmar_mensaje(mensaje: bytes, rsa_private_pem: bytes, passphrase: bytes | None = None) -> bytes:
-    """
-    Firma un mensaje usando RSA-PSS con SHA256.
-    Devuelve la firma como bytes.
-    """
     private_key = serialization.load_pem_private_key(
         rsa_private_pem,
         password=passphrase,
@@ -112,10 +108,6 @@ def firmar_mensaje(mensaje: bytes, rsa_private_pem: bytes, passphrase: bytes | N
 
 
 def verificar_firma_mensaje(mensaje: bytes, firma: bytes, rsa_public_pem: bytes) -> bool:
-    """
-    Verifica una firma RSA-PSS con SHA256.
-    Devuelve True si la firma es válida, False si no.
-    """
     public_key = serialization.load_pem_public_key(
         rsa_public_pem,
         backend=default_backend()

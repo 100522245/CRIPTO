@@ -77,9 +77,9 @@ policy		= policy_match
 
 # For the CA policy
 [ policy_match ]
-countryName		= match
-stateOrProvinceName	= match
-organizationName	= match
+countryName		= optional
+stateOrProvinceName	= optional
+organizationName	= optional
 organizationalUnitName	= optional
 commonName		= supplied
 emailAddress		= optional
@@ -100,7 +100,7 @@ emailAddress		= optional
 [ req ]
 default_bits		= 1024
 default_keyfile 	= ./privado/ca1key.pem
-default_md		= sha1	
+default_md		= sha256
 prompt			= no 
 distinguished_name	= req_distinguished_name
 attributes		= req_attributes

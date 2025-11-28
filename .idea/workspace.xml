@@ -5,23 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Correccion de detalles">
-      <change afterPath="$PROJECT_DIR$/eval2/firma.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_10_2025_11_21_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_10_2025_11_21__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_29_10_2025_12_04_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_29_10_2025_12_04__Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/eval2/claves.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eval2/csr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/reservados.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AC1/.rnd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AC1/index.txt" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/index.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AC1/index.txt.old" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/index.txt.old" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AC1/openssl_AC1.cnf" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/openssl_AC1.cnf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AC1/serial" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/serial" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eval1/autentificacion.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/autentificacion.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/data/keys/1234/private.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/data/keys/1234/public.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/data/keys/12345/private.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/data/keys/12345/public.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/data/keys/ivan900/private.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/data/keys/ivan900/public.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval2/firma.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval2/firma.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,6 +64,7 @@
     &quot;Python.regenerar_claves.executor&quot;: &quot;Run&quot;,
     &quot;Python.test_cifrado.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }

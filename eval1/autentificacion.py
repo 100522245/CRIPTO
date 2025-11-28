@@ -2,32 +2,38 @@ import os
 import json
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.exceptions import InvalidKey
-from cryptography.hazmat.primitives import serialization
-from eval1.cifrado_descifrado import generate_rsa_keypair
-from cryptography import x509
-from cryptography.x509.oid import NameOID
-from cryptography.hazmat.primitives import hashes
+from eval2.claves import generar_y_guardar_claves
+from eval2.csr import generar_csr_usuario
 
-# Archivo donde se guardan los usuarios, sus salt y hash de contraseña
+
+# Ruta donde se almacenan los usuarios registrados junto a su salt y hash de contraseña
 RUTA_USUARIOS = "data/usuarios.json"
 
 
 def derivar_clave(contrasena: str, salt: bytes) -> bytes:
-    """Usamos Scrypt para derivar una clave de 32 bytes a partir de la
-    contraseña y un salt."""
+    """
+    Deriva una clave segura usando Scrypt.
+    - Scrypt es una KDF resistente a ataques de fuerza bruta y hardware especializado.
+    - Recibe la contraseña del usuario y un salt único.
+    - Devuelve un hash de 32 bytes que representa la contraseña derivada.
+    """
     kdf = Scrypt(
-        salt=salt,
-        length=32,
-        n=2**14,
-        r=8,
+        salt=salt,         # Salt aleatorio para evitar ataques de diccionario
+        length=32,         # Tamaño del hash/clave resultante
+        n=2**14,           # Coste computacional (más alto = más seguro)
+        r=8,               # Parámetros internos del algoritmo
         p=1
     )
     return kdf.derive(contrasena.encode("utf-8"))
 
 
 def verificar_clave(contrasena: str, salt: bytes, hash_guardado: bytes) -> bool:
-    """Verificamos si el hash de la contraseña introducida coincide con el
-    hash almacenado."""
+    """
+    Verifica que una contraseña introducida coincide con su hash guardado:
+    - Se deriva nuevamente la clave con el mismo salt.
+    - Si coincide con el hash almacenado → contraseña correcta.
+    - Si no, Scrypt lanza InvalidKey.
+    """
     kdf = Scrypt(
         salt=salt,
         length=32,
@@ -43,110 +49,72 @@ def verificar_clave(contrasena: str, salt: bytes, hash_guardado: bytes) -> bool:
 
 
 def registrar(nombre: str, contrasena: str):
-    """Registra un usuario:
-       - Genera un salt aleatorio y deriva el hash de la contraseña con Scrypt.
-       - Genera par de claves RSA y las guarda en data/keys/<usuario>/.
-       - Genera un CSR (Certificate Signing Request) para el usuario.
     """
-    from cryptography import x509
-    from cryptography.x509.oid import NameOID
-    from cryptography.hazmat.primitives import hashes
+    Registra un nuevo usuario en el sistema.
+    """
 
-    # ===== 1) SALT + HASH DE CONTRASEÑA =====
+    # HASH + SALT
+    # Salt aleatorio para evitar ataques de rainbow tables
     salt = os.urandom(16)
     hash_generado = derivar_clave(contrasena, salt)
 
-    # Cargar usuarios existentes
+    # Cargar usuarios existentes si el archivo ya existe
     usuarios = {}
     if os.path.exists(RUTA_USUARIOS):
         with open(RUTA_USUARIOS, "r", encoding="utf-8") as f:
             usuarios = json.load(f)
 
+    # Evitar que dos usuarios tengan el mismo nombre
     if nombre in usuarios:
         raise ValueError("El usuario ya existe")
 
-    # Guardar hash + salt en JSON
+    # Guardar los datos de hash y salt del usuario
     usuarios[nombre] = {
         "salt": salt.hex(),
         "hash": hash_generado.hex(),
     }
 
-    # ===== 2) CREAR CARPETA DEL USUARIO =====
-    os.makedirs("data/keys", exist_ok=True)
-    user_dir = os.path.join("data/keys", nombre)
-    os.makedirs(user_dir, exist_ok=True)
-
-    # ===== 3) GENERAR PAR DE CLAVES RSA =====
-    private_key, public_key = generate_rsa_keypair()
-
-    # Serializar clave privada cifrada con la contraseña
-    private_pem = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.BestAvailableEncryption(
-            contrasena.encode("utf-8")
-        )
-    )
-
-    # Serializar clave pública
-    public_pem = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-
-    # Guardar claves en disco
-    with open(os.path.join(user_dir, "private.pem"), "wb") as f:
-        f.write(private_pem)
-    with open(os.path.join(user_dir, "public.pem"), "wb") as f:
-        f.write(public_pem)
-
-    # Guardar usuarios.json actualizado
+    # Guardar el archivo actualizado
     with open(RUTA_USUARIOS, "w", encoding="utf-8") as f:
         json.dump(usuarios, f, ensure_ascii=False, indent=4)
 
-    # ===== 4) GENERAR CSR DEL USUARIO =====
-    subject = x509.Name([
-        x509.NameAttribute(NameOID.COUNTRY_NAME, "ES"),
-        x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "MADRID"),
-        x509.NameAttribute(NameOID.LOCALITY_NAME, "MADRID"),
-        x509.NameAttribute(NameOID.ORGANIZATION_NAME, "UC3M"),
-        x509.NameAttribute(NameOID.COMMON_NAME, nombre),
-        x509.NameAttribute(NameOID.EMAIL_ADDRESS, f"{nombre}@correo.com"),
-    ])
+    # Se genera el par de claves RSA del usuario.
+    # La clave privada se guarda cifrada con su contraseña
+    private_key = generar_y_guardar_claves(nombre, contrasena)
 
-    csr = (
-        x509.CertificateSigningRequestBuilder()
-        .subject_name(subject)
-        .sign(private_key, hashes.SHA256())
-    )
-
-    csr_pem = csr.public_bytes(serialization.Encoding.PEM)
-
-    with open(os.path.join(user_dir, "usuario.csr"), "wb") as f:
-        f.write(csr_pem)
+    # GENERAR CSR
+    # El CSR se usará para solicitar un certificado X.509 a la Autoridad Certificadora
+    generar_csr_usuario(nombre, private_key)
 
     print(f"Usuario {nombre} registrado correctamente.")
     print(" - Claves generadas (private.pem / public.pem)")
     print(" - CSR generado correctamente (usuario.csr)")
 
 
-
 def autenticar(nombre: str, contrasena: str) -> bool:
-    """Comprueba usuario y contraseña."""
+    """
+    Verifica si un usuario puede autenticarse mediante su contraseña.
+    """
+
+    # Verifica si aún no existe el archivo de usuarios
     if not os.path.exists(RUTA_USUARIOS):
         print("No hay usuarios registrados aún")
         return False
 
-    # Cargamos los usuarios y verificamos que el nombre exista
+    # Cargar todos los usuarios
     with open(RUTA_USUARIOS, "r", encoding="utf-8") as f:
         usuarios = json.load(f)
+
+    # Verificar que el usuario exista
     if nombre not in usuarios:
         print("Usuario no encontrado.")
         return False
 
-    # Recuperamos salt y hash para verificar la contraseña
+    # Obtener salt y hash del usuario
     salt = bytes.fromhex(usuarios[nombre]["salt"])
     hash_guardado = bytes.fromhex(usuarios[nombre]["hash"])
+
+    # Comparar la contraseña introducida con la real
     if verificar_clave(contrasena, salt, hash_guardado):
         print("Los datos son correctos")
         return True

@@ -17,10 +17,10 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 
-from cryptography.hazmat.primitives import serialization
-
 from eval1 import autentificacion as auth
 from eval1 import cifrado_descifrado as crypto
+from eval2.firma import firmar_mensaje, verificar_firma_mensaje
+from eval2.certificado import obtener_clave_publica_usuario
 
 # Rutas
 RUTA_VUELOS = "data/vuelos.json"
@@ -97,39 +97,25 @@ def crear_reserva(usuario: str, numero_vuelo: str, passphrase: bytes):
     Guarda en disco como:
       data/reservas/<usuario>/reservaN.json
     """
-    from cryptography import x509
-    from cryptography.hazmat.primitives import serialization
-
     vuelo = vuelo_por_numero(numero_vuelo)
     if not vuelo:
         return False, "Vuelo no encontrado."
 
-    # Cargar CERTIFICADO del usuario, NO public.pem
-    ruta_cert = os.path.join(RUTA_KEYS, usuario, "cert.pem")
+    # Clave privada del usuario
     ruta_priv = os.path.join(RUTA_KEYS, usuario, "private.pem")
+    if not os.path.exists(ruta_priv):
+        return False, "No se encontró la clave privada del usuario."
 
-    if not os.path.exists(ruta_cert) or not os.path.exists(ruta_priv):
-        return False, "No se encontró el certificado o la clave privada del usuario."
-
-    # Cargar certificado y extraer la clave pública
-    with open(ruta_cert, "rb") as f:
-        cert_pem = f.read()
-
-    cert = x509.load_pem_x509_certificate(cert_pem)
-    public_key = cert.public_key()
-
-    # Convertimos la public key a PEM (para pasarla al módulo de cifrado)
-    public_pem = public_key.public_bytes(
-        serialization.Encoding.PEM,
-        serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-
-    # Cargar clave privada cifrada del usuario
     with open(ruta_priv, "rb") as f:
         private_pem = f.read()
 
+    # Clave pública certificada del usuario (valida frente a la CA)
+    try:
+        public_pem = obtener_clave_publica_usuario(usuario)
+    except Exception as e:
+        return False, f"Error con el certificado del usuario:\n{e}"
+
     # Asignación de asiento
-    import random
     columnas = "ABCDEF"
     asiento = f"{random.randint(1, 40)}{random.choice(columnas)}"
     business = random.choice([True, False])
@@ -146,7 +132,7 @@ def crear_reserva(usuario: str, numero_vuelo: str, passphrase: bytes):
     datos_bytes = json.dumps(reserva_plana, ensure_ascii=False).encode("utf-8")
 
     # Firmar en claro
-    firma = crypto.firmar_mensaje(datos_bytes, private_pem, passphrase=passphrase)
+    firma = firmar_mensaje(datos_bytes, private_pem, passphrase=passphrase)
 
     aad = f"usuario={usuario}|vuelo={numero_vuelo}".encode("utf-8")
 
@@ -164,7 +150,6 @@ def crear_reserva(usuario: str, numero_vuelo: str, passphrase: bytes):
     return True, "Reserva realizada correctamente (cifrada y firmada con certificado)."
 
 
-
 # ---------------------------------------------------------------------------
 # DESCIFRADO DE RESERVAS Y VERIFICACIÓN DE FIRMA
 # ---------------------------------------------------------------------------
@@ -173,34 +158,20 @@ def cargar_reservas_descifradas(usuario: str, passphrase: bytes):
     Descifra todas las reservas del usuario usando su clave privada,
     y verifica las firmas con la clave pública extraída del certificado cert.pem.
     """
-    from cryptography import x509
-    from cryptography.hazmat.primitives import serialization
-
     if passphrase is None:
         raise ValueError("Se requiere la contraseña para descifrar las reservas.")
 
     ruta_priv = os.path.join(RUTA_KEYS, usuario, "private.pem")
-    ruta_cert = os.path.join(RUTA_KEYS, usuario, "cert.pem")
 
-    if not os.path.exists(ruta_priv) or not os.path.exists(ruta_cert):
-        raise FileNotFoundError("Falta la clave privada o el certificado del usuario.")
+    if not os.path.exists(ruta_priv):
+        raise FileNotFoundError("Falta la clave privada del usuario.")
 
-    # Cargar certificado del usuario
-    with open(ruta_cert, "rb") as f:
-        cert_pem = f.read()
-
-    cert = x509.load_pem_x509_certificate(cert_pem)
-    public_key = cert.public_key()
-
-    # Convertimos la clave pública a bytes PEM (para el verificador)
-    public_pem = public_key.public_bytes(
-        serialization.Encoding.PEM,
-        serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-
-    # Cargar clave privada
+    # Clave privada
     with open(ruta_priv, "rb") as f:
         private_pem = f.read()
+
+    # Clave pública certificada (validada frente a la CA)
+    public_pem = obtener_clave_publica_usuario(usuario)
 
     carpeta = dir_reservas_usuario(usuario)
     reservas = []
@@ -220,7 +191,7 @@ def cargar_reservas_descifradas(usuario: str, passphrase: bytes):
 
         firma_valida = False
         if firma:
-            firma_valida = crypto.verificar_firma_mensaje(plano_bytes, firma, public_pem)
+            firma_valida = verificar_firma_mensaje(plano_bytes, firma, public_pem)
 
         reserva["_tiene_firma"] = firma is not None
         reserva["_firma_valida"] = firma_valida
@@ -228,7 +199,6 @@ def cargar_reservas_descifradas(usuario: str, passphrase: bytes):
         reservas.append(reserva)
 
     return reservas
-
 
 
 # ---------------------------------------------------------------------------

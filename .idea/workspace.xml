@@ -4,19 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Correccion de detalles">
-      <change afterPath="$PROJECT_DIR$/eval2/claves.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/eval2/csr.py" afterDir="false" />
+    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Refactorización codigo">
+      <change afterPath="$PROJECT_DIR$/eval2/certificado.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AC1/.rnd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AC1/index.txt" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/index.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AC1/index.txt.old" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/index.txt.old" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AC1/openssl_AC1.cnf" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/openssl_AC1.cnf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AC1/serial" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/serial" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/autentificacion.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/autentificacion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval1/cifrado_descifrado.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval2/firma.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval2/firma.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interfaz.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfaz.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,6 +60,11 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Trace\PycharmProjects\CRIPTO\AC1\solicitudes" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.interfaz">
     <configuration name="autentificacion" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CRIPTO" />
@@ -262,7 +258,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761840080650</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Refactorización codigo">
+      <option name="closed" value="true" />
+      <created>1764328036293</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1764328036293</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -284,6 +288,7 @@
     <MESSAGE value="Cambios mayoritariamente en comentarios y la interfaz" />
     <MESSAGE value="Interfaz cambiada" />
     <MESSAGE value="Correccion de detalles" />
-    <option name="LAST_COMMIT_MESSAGE" value="Correccion de detalles" />
+    <MESSAGE value="Refactorización codigo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactorización codigo" />
   </component>
 </project>

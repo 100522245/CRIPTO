@@ -99,14 +99,14 @@ def load_pem(path: str, contrasena: bytes | None = None):
 
 def generar_y_guardar_claves(nombre: str, contrasena: str):
     """
-    Genera el par de claves RSA del usuario y las guarda en disco.
+    Genera el par de claves RSA del usuario y guarda solo la clave privada cifrada.
     """
     # Crear la carpeta del usuario si no existe
     user_dir = os.path.join("data/keys", nombre)
     os.makedirs(user_dir, exist_ok=True)
 
     # Generar las dos claves
-    private_key, public_key = generate_rsa_keypair()
+    private_key, _public_key = generate_rsa_keypair()
 
     # Serializar la clave privada,cifrada con la contraseña del usuario
     private_pem = private_key.private_bytes(
@@ -117,18 +117,9 @@ def generar_y_guardar_claves(nombre: str, contrasena: str):
         )
     )
 
-    # Serializar la clave pública
-    public_pem = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-
-    # Guardar ambos archivos
+    # Guardar solo la clave privada; la pública se obtiene del certificado/CSR
     with open(os.path.join(user_dir, "private.pem"), "wb") as f:
         f.write(private_pem)
-
-    with open(os.path.join(user_dir, "public.pem"), "wb") as f:
-        f.write(public_pem)
 
     return private_key
 

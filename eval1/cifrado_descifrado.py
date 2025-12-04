@@ -6,49 +6,50 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
+from eval2.certificado import obtener_clave_publica_usuario
 
-def encrypt_reserva(reserva_bytes: bytes,rsa_public_pem: bytes,aad: bytes = b"",firma: bytes | None = None) -> bytes:
+
+def encrypt_reserva(reserva_bytes: bytes, usuario: str, aad: bytes = b"", firma: bytes | None = None) -> bytes:
     """
-    Cifra los datos de una reserva utilizando cifrado híbrido.
+    Cifra los datos de una reserva utilizando cifrado híbrido con la clave pública del usuario.
     """
 
-    # Generar una clave simétrica AES
+    # Generar clave AES
     clave_aes = AESGCM.generate_key(bit_length=256)
     aesgcm = AESGCM(clave_aes)
-
-    # Generar nonce aleatorio
-    # GCM requiere un nonce único por mensaje
     nonce = os.urandom(12)
 
-    # Cifrado autenticado con AES-GCM
+    # Cifrar la reserva con AES-GCM
     ciphertext = aesgcm.encrypt(nonce, reserva_bytes, aad)
 
-    # Cifrar la clave AES con la clave pública
+    # Obtener clave pública del usuario
+    rsa_public_pem = obtener_clave_publica_usuario(usuario)
     clave_publica = serialization.load_pem_public_key(rsa_public_pem)
+
+    # Cifrar la clave AES con RSA-OAEP
     clave_aes_cifrada = clave_publica.encrypt(
         clave_aes,
         padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA256()),  # Función de relleno segura
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
             algorithm=hashes.SHA256(),
             label=None
-        ),
+        )
     )
 
-    # Construir el JSON que contiene lo necesario para descifrar
+    # Construir payload JSON
     payload = {
-        "algoritmo": "AES-GCM+RSA-OAEP",  # Para identificar esquemas usados
+        "algoritmo": "AES-GCM+RSA-OAEP",
         "clave_aes_cifrada": base64.b64encode(clave_aes_cifrada).decode("ascii"),
         "nonce": base64.b64encode(nonce).decode("ascii"),
         "ciphertext": base64.b64encode(ciphertext).decode("ascii"),
         "aad": base64.b64encode(aad).decode("ascii"),
     }
 
-    # Si el mensaje se firmó, incluir la firma
     if firma is not None:
         payload["firma"] = base64.b64encode(firma).decode("ascii")
 
-    # Devolver el JSON como bytes
     return json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+
 
 
 def decrypt_reserva(encrypted_json: bytes,rsa_private_pem: bytes,passphrase: bytes) -> Tuple[bytes, bytes | None]:

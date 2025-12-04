@@ -1,14 +1,3 @@
-# interfaz_vuelos.py
-"""
-Interfaz:
-- Registro / Login
-- Listado de vuelos (desde data/vuelos.json)
-- Reservar vuelo → crea un fichero CIFRADO:
-    data/reservas/<usuario>/reservaN.json
-- Botón "Mis reservas" → muestra las reservas del usuario descifradas
-  e indica si la FIRMA digital es válida.
-"""
-
 import os
 import json
 import random
@@ -18,188 +7,7 @@ from tkinter import messagebox
 from tkinter import ttk
 
 from eval1 import autentificacion as auth
-from eval1 import cifrado_descifrado as crypto
-from eval2.firma import firmar_mensaje, verificar_firma_mensaje
-from eval2.certificado import obtener_clave_publica_usuario
-
-# Rutas
-RUTA_VUELOS = "data/vuelos.json"
-RUTA_KEYS = "data/keys"         # data/keys/<usuario>/{public.pem, private.pem}
-RUTA_RESERVAS = "data/reservas" # data/reservas/<usuario>/reservaN.json
-
-USUARIOS_DB = auth.RUTA_USUARIOS
-
-
-# ---------------------------------------------------------------------------
-# UTILIDADES JSON
-# ---------------------------------------------------------------------------
-def _leer_json(ruta, por_defecto):
-    if not os.path.exists(ruta):
-        return por_defecto
-    try:
-        with open(ruta, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except json.JSONDecodeError:
-        return por_defecto
-
-
-def _guardar_json(ruta, data):
-    carpeta = os.path.dirname(ruta)
-    if carpeta:
-        os.makedirs(carpeta, exist_ok=True)
-    with open(ruta, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-
-
-# ---------------------------------------------------------------------------
-# VUELOS
-# ---------------------------------------------------------------------------
-def vuelos_disponibles():
-    """Lee y devuelve la lista de vuelos desde data/vuelos.json."""
-    return _leer_json(RUTA_VUELOS, [])
-
-
-def vuelo_por_numero(numero_vuelo: str):
-    """Devuelve el vuelo cuyo numero_vuelo coincide (o None)."""
-    for v in vuelos_disponibles():
-        if str(v.get("numero_vuelo")) == str(numero_vuelo):
-            return v
-    return None
-
-
-# ---------------------------------------------------------------------------
-# RESERVAS CIFRADAS
-# ---------------------------------------------------------------------------
-def dir_reservas_usuario(usuario: str) -> str:
-    """Devuelve el directorio donde se guardan las reservas cifradas del usuario."""
-    ruta = os.path.join(RUTA_RESERVAS, usuario)
-    os.makedirs(ruta, exist_ok=True)
-    return ruta
-
-
-def siguiente_indice_reserva(usuario: str) -> int:
-    """
-    Calcula el siguiente índice de reserva para el usuario:
-      reserva1.json, reserva2.json, ...
-    """
-    ruta = dir_reservas_usuario(usuario)
-    indices = []
-    for nombre in os.listdir(ruta):
-        m = re.match(r"reserva(\d+)\.json$", nombre)
-        if m:
-            indices.append(int(m.group(1)))
-    return (max(indices) + 1) if indices else 1
-
-
-def crear_reserva(usuario: str, numero_vuelo: str, passphrase: bytes):
-    """
-    Crea una reserva en memoria, la FIRMA digitalmente y la CIFRA.
-    Guarda en disco como:
-      data/reservas/<usuario>/reservaN.json
-    """
-    vuelo = vuelo_por_numero(numero_vuelo)
-    if not vuelo:
-        return False, "Vuelo no encontrado."
-
-    # Clave privada del usuario
-    ruta_priv = os.path.join(RUTA_KEYS, usuario, "private.pem")
-    if not os.path.exists(ruta_priv):
-        return False, "No se encontró la clave privada del usuario."
-
-    with open(ruta_priv, "rb") as f:
-        private_pem = f.read()
-
-    # Clave pública certificada del usuario (valida frente a la CA)
-    try:
-        public_pem = obtener_clave_publica_usuario(usuario)
-    except Exception as e:
-        return False, f"Error con el certificado del usuario:\n{e}"
-
-    # Asignación de asiento
-    columnas = "ABCDEF"
-    asiento = f"{random.randint(1, 40)}{random.choice(columnas)}"
-    business = random.choice([True, False])
-
-    reserva_plana = {
-        "usuario": usuario,
-        "numero_vuelo": numero_vuelo,
-        "vuelo": vuelo,
-        "asiento": asiento,
-        "business": business,
-        "hora_embarque": vuelo.get("hora_salida", "")
-    }
-
-    datos_bytes = json.dumps(reserva_plana, ensure_ascii=False).encode("utf-8")
-
-    # Firmar en claro
-    firma = firmar_mensaje(datos_bytes, private_pem, passphrase=passphrase)
-
-    aad = f"usuario={usuario}|vuelo={numero_vuelo}".encode("utf-8")
-
-    # Cifrado híbrido
-    cifrado_bytes = crypto.encrypt_reserva(datos_bytes, public_pem, aad=aad, firma=firma)
-
-    # Guardado
-    user_dir = dir_reservas_usuario(usuario)
-    indice = siguiente_indice_reserva(usuario)
-    ruta_out = os.path.join(user_dir, f"reserva{indice}.json")
-
-    with open(ruta_out, "wb") as f:
-        f.write(cifrado_bytes)
-
-    return True, "Reserva realizada correctamente (cifrada y firmada con certificado)."
-
-
-# ---------------------------------------------------------------------------
-# DESCIFRADO DE RESERVAS Y VERIFICACIÓN DE FIRMA
-# ---------------------------------------------------------------------------
-def cargar_reservas_descifradas(usuario: str, passphrase: bytes):
-    """
-    Descifra todas las reservas del usuario usando su clave privada,
-    y verifica las firmas con la clave pública extraída del certificado cert.pem.
-    """
-    if passphrase is None:
-        raise ValueError("Se requiere la contraseña para descifrar las reservas.")
-
-    ruta_priv = os.path.join(RUTA_KEYS, usuario, "private.pem")
-
-    if not os.path.exists(ruta_priv):
-        raise FileNotFoundError("Falta la clave privada del usuario.")
-
-    # Clave privada
-    with open(ruta_priv, "rb") as f:
-        private_pem = f.read()
-
-    # Clave pública certificada (validada frente a la CA)
-    public_pem = obtener_clave_publica_usuario(usuario)
-
-    carpeta = dir_reservas_usuario(usuario)
-    reservas = []
-
-    for archivo in os.listdir(carpeta):
-        if not (archivo.startswith("reserva") and archivo.endswith(".json")):
-            continue
-
-        ruta = os.path.join(carpeta, archivo)
-        with open(ruta, "rb") as f:
-            cifrado = f.read()
-
-        # Descifrar
-        plano_bytes, firma = crypto.decrypt_reserva(cifrado, private_pem, passphrase)
-
-        reserva = json.loads(plano_bytes.decode("utf-8"))
-
-        firma_valida = False
-        if firma:
-            firma_valida = verificar_firma_mensaje(plano_bytes, firma, public_pem)
-
-        reserva["_tiene_firma"] = firma is not None
-        reserva["_firma_valida"] = firma_valida
-
-        reservas.append(reserva)
-
-    return reservas
-
+import management  # <-- Importamos nuestro management.py
 
 # ---------------------------------------------------------------------------
 # INTERFAZ TKINTER
@@ -317,7 +125,7 @@ class AppVuelos:
             messagebox.showerror("Registro", f"Error al registrar: {e}")
             return
 
-        usuarios = _leer_json(USUARIOS_DB, {})
+        usuarios = management._leer_json(auth.RUTA_USUARIOS, {})
         perfil = usuarios.get(usuario, {})
         perfil.update({
             "nombre": nombre,
@@ -325,7 +133,7 @@ class AppVuelos:
             "fecha_nacimiento": fecha_nac,
         })
         usuarios[usuario] = perfil
-        _guardar_json(USUARIOS_DB, usuarios)
+        management._guardar_json(auth.RUTA_USUARIOS, usuarios)
 
         messagebox.showinfo("Registro", "Usuario registrado correctamente.")
         self.build_login()
@@ -369,9 +177,9 @@ class AppVuelos:
         self.refrescar_vuelos()
 
     def refrescar_vuelos(self):
-        """Rellena la lista de vuelos desde vuelos.json."""
+        """Rellena la lista de vuelos desde management.vuelos_disponibles()."""
         self.lista_vuelos.delete(0, tk.END)
-        vuelos = vuelos_disponibles()
+        vuelos = management.vuelos_disponibles()
         if not vuelos:
             self.lista_vuelos.insert(tk.END, "No hay vuelos en data/vuelos.json")
             return
@@ -385,7 +193,7 @@ class AppVuelos:
             self.lista_vuelos.insert(tk.END, linea)
 
     def reservar_vuelo(self):
-        """Crea una reserva CIFRADA y FIRMADA del vuelo seleccionado."""
+        """Crea una reserva CIFRADA y FIRMADA del vuelo seleccionado usando management.py."""
         sel = self.lista_vuelos.curselection()
         if not sel:
             messagebox.showwarning("Reserva", "Selecciona un vuelo primero.")
@@ -398,7 +206,7 @@ class AppVuelos:
             messagebox.showerror("Reserva", "No hay contraseña almacenada en la sesión.")
             return
 
-        ok, msg = crear_reserva(
+        ok, msg = management.crear_reserva(
             self.usuario_actual,
             numero_vuelo,
             self.password_actual.encode("utf-8")
@@ -416,7 +224,7 @@ class AppVuelos:
 
         try:
             passphrase = self.password_actual.encode("utf-8")
-            reservas = cargar_reservas_descifradas(self.usuario_actual, passphrase)
+            reservas = management.cargar_reservas_descifradas(self.usuario_actual, passphrase)
         except Exception as e:
             messagebox.showerror("Mis reservas", f"No se pudieron cargar las reservas:\n{e}")
             return

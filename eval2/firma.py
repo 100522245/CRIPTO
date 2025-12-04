@@ -28,7 +28,7 @@ def firmar_mensaje(mensaje: bytes,rsa_private_pem: bytes,passphrase: bytes | Non
     return firma
 
 
-def verificar_firma_mensaje(mensaje: bytes,firma: bytes,rsa_public_pem: bytes) -> bool:
+def verificar_firma_mensaje(mensaje: bytes,firma: bytes,public_pem: bytes) -> bool:
     """
     Se verifica que la firma corresponda al mensaje.
        - Si la firma coincide → el mensaje es auténtico y no ha sido modificado.
@@ -37,7 +37,7 @@ def verificar_firma_mensaje(mensaje: bytes,firma: bytes,rsa_public_pem: bytes) -
 
     # Cargar clave pública desde el PEM
     public_key = serialization.load_pem_public_key(
-        rsa_public_pem,
+        public_pem,
         backend=default_backend()
     )
 

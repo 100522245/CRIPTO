@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Evitar que el usuario genere el pem">
-      <change afterPath="$PROJECT_DIR$/AC1/nuevoscerts/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AC1/solicitudes/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AC1/.rnd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AC1/serial" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/serial" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
+    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Memoria practica">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -292,7 +287,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764803861454</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Fin de practica">
+      <option name="closed" value="true" />
+      <created>1764885663468</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1764885663468</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Memoria practica">
+      <option name="closed" value="true" />
+      <created>1764885876756</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1764885876756</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -317,6 +328,8 @@
     <MESSAGE value="Refactorización codigo" />
     <MESSAGE value="Validación" />
     <MESSAGE value="Evitar que el usuario genere el pem" />
-    <option name="LAST_COMMIT_MESSAGE" value="Evitar que el usuario genere el pem" />
+    <MESSAGE value="Fin de practica" />
+    <MESSAGE value="Memoria practica" />
+    <option name="LAST_COMMIT_MESSAGE" value="Memoria practica" />
   </component>
 </project>

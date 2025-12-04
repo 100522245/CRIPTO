@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Validación">
+    <list default="true" id="f7e4bc40-26a3-4000-863e-94ba5dfba927" name="Changes" comment="Evitar que el usuario genere el pem">
+      <change afterPath="$PROJECT_DIR$/AC1/nuevoscerts/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AC1/solicitudes/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AC1/openssl_AC1.cnf" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/openssl_AC1.cnf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eval2/claves.py" beforeDir="false" afterPath="$PROJECT_DIR$/eval2/claves.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AC1/.rnd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AC1/serial" beforeDir="false" afterPath="$PROJECT_DIR$/AC1/serial" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/usuarios.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/usuarios.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,29 +48,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.autentificacion.executor": "Run",
-    "Python.cifrado_descifrado (1).executor": "Run",
-    "Python.cifrado_descifrado.executor": "Run",
-    "Python.etiquetas.executor": "Run",
-    "Python.interfaz.executor": "Run",
-    "Python.regenerar_claves.executor": "Run",
-    "Python.test_cifrado.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Trace/PycharmProjects/CRIPTO/data/keys/adri"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.autentificacion.executor&quot;: &quot;Run&quot;,
+    &quot;Python.cifrado_descifrado (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.cifrado_descifrado.executor&quot;: &quot;Run&quot;,
+    &quot;Python.etiquetas.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interfaz.executor&quot;: &quot;Run&quot;,
+    &quot;Python.regenerar_claves.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_cifrado.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Trace/PycharmProjects/CRIPTO/data/keys/adri&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Trace\PycharmProjects\CRIPTO\data\keys\adri" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Trace\PycharmProjects\CRIPTO\data\keys\a" />
       <recent name="C:\Users\Trace\PycharmProjects\CRIPTO\AC1\solicitudes" />
+      <recent name="C:\Users\Trace\PycharmProjects\CRIPTO\data\keys\Adrian" />
+      <recent name="C:\Users\Trace\PycharmProjects\CRIPTO\data\keys\a" />
       <recent name="C:\Users\Trace\PycharmProjects\CRIPTO\data\keys\adri" />
     </key>
   </component>
@@ -280,7 +284,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764524090202</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Evitar que el usuario genere el pem">
+      <option name="closed" value="true" />
+      <created>1764803861454</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1764803861454</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -304,6 +316,7 @@
     <MESSAGE value="Correccion de detalles" />
     <MESSAGE value="Refactorización codigo" />
     <MESSAGE value="Validación" />
-    <option name="LAST_COMMIT_MESSAGE" value="Validación" />
+    <MESSAGE value="Evitar que el usuario genere el pem" />
+    <option name="LAST_COMMIT_MESSAGE" value="Evitar que el usuario genere el pem" />
   </component>
 </project>
